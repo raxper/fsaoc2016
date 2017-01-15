@@ -98,11 +98,12 @@ let day2part1 = getCode (sw.ToString()) move '5'
 
 (* Part 2 *)
 
+(* New keypad *)
 let move2 curBtn input =
   match input with
   | L -> 
     match curBtn with
-    | '1' -> '1'
+    | '1' -> '1' 
     | '2' | '3' -> '2'
     | '4' -> '3'
     | '5' | '6' -> '5'
@@ -110,7 +111,7 @@ let move2 curBtn input =
     | '8' -> '7'
     | '9' -> '8'
     | 'A' | 'B' -> 'A'
-    | 'C' -> 'C'
+    | 'C' -> 'B'
     | 'D' -> 'D'
     | _ -> failwith "move2.L"
   | R -> 
