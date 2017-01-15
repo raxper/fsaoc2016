@@ -38,9 +38,14 @@ let possibleTrianglesCount triangleEvaluator =
     >> Seq.cast
     >> Seq.map
       (fun (x : System.Text.RegularExpressions.Match) -> x.Value |> int)
-    >> Seq.toList
     )
-  |> Seq.filter (fun il -> triangleEvaluator il.[0] il.[1] il.[2])
+  |> Seq.filter 
+    (fun il -> 
+      triangleEvaluator 
+        (Seq.item 0 il) 
+        (Seq.item 1 il)
+        (Seq.item 2 il)
+    )
 
 (* Answer for Day 3 Part 1 *)
 let day3part1 = 
@@ -63,3 +68,45 @@ For example, given the following specification, numbers with the same hundreds d
 In your puzzle input, and instead reading by columns, how many of the listed triangles are possible?
 *)
 
+(* Function to group values in input file vertically, then evaluate as
+  triangles *)
+let possibleVerticalTrianglesCount triangleEvaluator =
+  (* Read in the file and convert all values to ints *)
+  let readInts =
+    File.ReadLines @"3\puzzle_input"
+    |> Seq.map
+      ((fun line -> Regex.Matches (line, @"[0-9]+"))
+      >> Seq.cast
+      >> Seq.map
+        (fun (x : System.Text.RegularExpressions.Match) -> x.Value |> int)
+      )
+  (* Turn 3 columns of ints into 1 column *)
+  let colOfInts ints = 
+    ints 
+    |> Seq.map (Seq.item 0)
+    |> Seq.append (ints |> Seq.map (Seq.item 1))
+    |> Seq.append (ints |> Seq.map (Seq.item 2))
+  (* Now divide 1 long column of ints into groups of 3 ints *)
+  let horizInts colInts = 
+    colInts
+    |> Seq.windowed 3
+    |> Seq.mapi (fun i elt -> i, elt |> Array.toSeq)
+    |> Seq.filter (fun (i, elt) -> i % 3 = 0)
+    |> Seq.map (fun (i, elt) -> elt)
+  (* Read the data, serialize it, group it again, then filter using 
+    evaluation function *)
+  readInts
+  |> colOfInts
+  |> horizInts
+  |> Seq.filter 
+    (fun il -> 
+      triangleEvaluator 
+        (Seq.item 0 il) 
+        (Seq.item 1 il)
+        (Seq.item 2 il)
+    )
+
+(* Answer for Day 3 Part 2 *)
+let day3part2 = 
+  possibleVerticalTrianglesCount possibleTriangle
+  |> Seq.length
