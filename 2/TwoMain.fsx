@@ -64,7 +64,6 @@ let move curBtn input =
   final value.
 *)
 let moveAll mFunc stBtn mInstr =
-  Printf.printfn "moveAll stBtn: %s" (stBtn.ToString());
   Regex.Matches (mInstr, @".")
   |> Seq.cast
   |> Seq.map 
@@ -166,8 +165,7 @@ let getCode2 instr func stBtn =
   |> Seq.fold 
     (fun (ans, st) nxtInstr -> 
       let nxtChar = moveAll func st nxtInstr in
-      (Printf.printfn "(%s, %s) %s" ans (st.ToString()) (nxtChar.ToString());
-      (ans + nxtChar.ToString(), nxtChar))
+      (ans + nxtChar.ToString(), nxtChar)
     ) 
     ("", stBtn)
 
