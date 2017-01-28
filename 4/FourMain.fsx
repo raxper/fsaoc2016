@@ -36,28 +36,34 @@ let calculateChecksum (line: string) =
   |> Seq.truncate 5
   |> Seq.fold (fun accum (elt, _) -> accum + elt.ToString()) ""
 
-let readFile () = 
-  let lines = File.ReadLines puzzleInput |> Seq.cast |> Seq.map string
-  let sectorIDs = 
-    lines 
+let lines = File.ReadAllLines puzzleInput |> Seq.cast |> Seq.map string
+
+let sectorIDs = 
+  lines 
+  |> Seq.map 
+    (fun line -> (Regex.Match (line, @"[0-9]+")).Groups.[0].Value |> int)
+
+let calculatedChecksums = 
+  lines
+  |> Seq.map
+    (fun line -> 
+    (Regex.Matches (line, @"([a-zA-Z]+)\-")) 
+    |> Seq.cast 
     |> Seq.map 
-      (fun line -> (Regex.Match (line, @"[0-9]+")).Groups.[0].Value |> int)
-  let calculatedChecksums = 
-    lines
-    |> Seq.map
-      (fun line -> 
-      (Regex.Matches (line, @"([a-zA-Z]+)\-")) 
-      |> Seq.cast 
-      |> Seq.map 
-        (fun (x : System.Text.RegularExpressions.Match) -> 
-        let substr = x.Value
-        substr.Substring(0, String.length substr - 1))
-      |> String.concat "" 
-      |> calculateChecksum
-      )
-  let providedChecksums = 
-    lines
-    |> Seq.map
-      (fun line -> (Regex.Match (line, @"\[([a-zA-Z]+)\]")).Groups.[1].Value)
-  calculatedChecksums
-  
+      (fun (x : System.Text.RegularExpressions.Match) -> 
+      let substr = x.Value
+      substr.Substring(0, String.length substr - 1))
+    |> String.concat "" 
+    |> calculateChecksum
+    )
+
+let providedChecksums = 
+  lines
+  |> Seq.map
+    (fun line -> (Regex.Match (line, @"\[([a-zA-Z]+)\]")).Groups.[1].Value)
+
+let day4part1 =
+  Seq.zip3 sectorIDs calculatedChecksums providedChecksums
+  |> Seq.filter (fun (_, ccs, pcs) -> ccs = pcs)
+  |> Seq.map (fun (sid, _, _) -> sid)
+  |> Seq.sum
