@@ -27,6 +27,9 @@ if ccTest4 then printfn "ccTest4: %b" ccTest4 else failwith "ccTest4"
 let ccTest5 = calculateChecksum "totallyrealroom" <> "decoy"
 if ccTest5 then printfn "ccTest5: %b" ccTest5 else failwith "ccTest5"
 
+let d4p1Test = day4part1 = 158835
+if d4p1Test then printfn "d4p1Test: %b" d4p1Test else failwith "d4p1Test"
+
 /// qzmt-zixmtkozy-ivhz-343 = very encrypted name
 let scTest1 = 
   @"qzmt-zixmtkozy-ivhz" 

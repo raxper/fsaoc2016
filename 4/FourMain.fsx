@@ -32,13 +32,12 @@ type Line = {
   sectorID: int
   calculatedChecksum: string
   providedChecksum: string
-  encryptedText: string
   decryptedText: string
 }
 
 let emptyLine = {
   line = ""; sectorID = 0; calculatedChecksum = ""; providedChecksum = "";
-  encryptedText = ""; decryptedText = ""
+  decryptedText = ""
 }
 
 /// Given a string of characters, returns the checksum (top 5 characters by frequency; ties are broken by alphabetization.  Strategy is to first sort by letters, then by count.  Both sorts are stable, so sorting by count will retain alphabetization when counts are the same
@@ -66,15 +65,16 @@ let calculateChecksums lines =
   lines
   |> Seq.map
     (fun l -> 
-      {l with calculatedChecksum = 
-      (Regex.Matches (l.line, @"([a-zA-Z]+)\-")) 
-      |> Seq.cast 
-      |> Seq.map 
-        (fun (x : System.Text.RegularExpressions.Match) -> 
-        let substr = x.Value
-        substr.Substring(0, String.length substr - 1))
-      |> String.concat "" 
-      |> calculateChecksum
+      {l with 
+        calculatedChecksum = 
+        (Regex.Matches (l.line, @"([a-zA-Z]+)\-")) 
+        |> Seq.cast 
+        |> Seq.map 
+          (fun (x : System.Text.RegularExpressions.Match) -> 
+            let substr = x.Value
+            substr.Substring(0, String.length substr - 1))
+        |> String.concat "" 
+        |> calculateChecksum
       }
     )
 
@@ -82,20 +82,17 @@ let extractProvidedChecksums lines =
   lines
   |> Seq.map
     (fun l -> 
-      {l with providedChecksum = 
-      (Regex.Match (l.line, @"\[([a-zA-Z]+)\]")).Groups.[1].Value})
+      {l with 
+        providedChecksum = 
+        (Regex.Match (l.line, @"\[([a-zA-Z]+)\]")).Groups.[1].Value})
 
 let day4part1 =
-  let lines = lines puzzleInput
-  let sectorIDs = extractSectorIDs lines |> Seq.map (fun x -> x.sectorID)
-  let calculatedChecksums = 
-    calculateChecksums lines |> Seq.map (fun x -> x.calculatedChecksum)
-  let providedChecksums = 
-    extractProvidedChecksums lines |> Seq.map (fun x -> x.providedChecksum)
-  Seq.zip3 sectorIDs calculatedChecksums providedChecksums
-  |> Seq.filter (fun (_, ccs, pcs) -> ccs = pcs)
-  |> Seq.map (fun (sid, _, _) -> sid)
-  |> Seq.sum
+  lines puzzleInput
+  |> extractSectorIDs
+  |> extractProvidedChecksums
+  |> calculateChecksums
+  |> Seq.filter (fun x -> x.providedChecksum = x.calculatedChecksum)
+  |> Seq.fold (fun accum elt -> accum + elt.sectorID) 0
 
 (*
 --- Part Two ---
@@ -120,4 +117,18 @@ let shiftCipher (letter: char) shift =
   if letter = '-' then ' '
   else letter |> charToInt |> (+) shift |> (fun x -> x % numChars) |> intToChar
 
-
+let day4part2 = 
+  lines puzzleInput
+  |> extractSectorIDs
+  |> extractProvidedChecksums
+  |> calculateChecksums
+  |> Seq.filter (fun x -> x.calculatedChecksum = x.providedChecksum)
+  |> Seq.map
+    (fun l ->
+    {l with 
+      decryptedText = 
+      (Regex.Match (l.line, @"([a-zA-Z]+\-)+")).Groups.[0].Value
+      |> Seq.map (fun elt -> shiftCipher elt l.sectorID)
+      |> System.String.Concat
+    })
+  |> Seq.filter (fun l -> l.decryptedText.StartsWith("north"))
