@@ -9,20 +9,28 @@ open FourMain
 
 /// "ebbbccdddddddda"
 let ccTest1 = calculateChecksum "ebbbccdddddddda" = "dbcae"
-printfn "ccTest1: %b" ccTest1
+if ccTest1 then printfn "ccTest1: %b" ccTest1 else failwith "ccTest1"
 
 /// "aaaaabbbzyx"
 let ccTest2 = calculateChecksum "aaaaabbbzyx" = "abxyz"
-printfn "ccTest2: %b" ccTest2
+if ccTest2 then printfn "ccTest2: %b" ccTest2 else failwith "ccTest2"
 
 /// "abcdefgh"
 let ccTest3 = calculateChecksum "abcdefgh" = "abcde"
-printfn "ccTest3: %b" ccTest3
+if ccTest3 then printfn "ccTest3: %b" ccTest3 else failwith "ccTest3"
 
 /// "notarealroom"
 let ccTest4 = calculateChecksum "notarealroom" = "oarel"
-printfn "ccTest4: %b" ccTest4
+if ccTest4 then printfn "ccTest4: %b" ccTest4 else failwith "ccTest4"
 
 /// "totallyrealroom"
 let ccTest5 = calculateChecksum "totallyrealroom" <> "decoy"
-printfn "ccTest5: %b" ccTest5
+if ccTest5 then printfn "ccTest5: %b" ccTest5 else failwith "ccTest5"
+
+/// qzmt-zixmtkozy-ivhz-343 = very encrypted name
+let scTest1 = 
+  @"qzmt-zixmtkozy-ivhz" 
+  |> Seq.map (fun elt -> shiftCipher elt 343)
+  |> System.String.Concat
+  |> (=) @"very encrypted name"
+if scTest1 then printfn "scTest1: %b" scTest1 else failwith "scTest1"
