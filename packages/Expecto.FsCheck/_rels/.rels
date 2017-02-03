@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Type="http://schemas.microsoft.com/packaging/2010/07/manifest" Target="/Expecto.FsCheck.nuspec" Id="R9775a77ef12547e8" />
+  <Relationship Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="/package/services/metadata/core-properties/fa393c1f098e49a7a8a3dc3197466ed7.psmdcp" Id="Re0050e4c68d44bbb" />
+</Relationships>

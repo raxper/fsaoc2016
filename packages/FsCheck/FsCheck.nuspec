@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>FsCheck</id>
+    <version>2.7.0</version>
+    <authors>Kurt Schelfthout and contributors</authors>
+    <owners>Kurt Schelfthout and contributors</owners>
+    <licenseUrl>https://github.com/fsharp/FsCheck/blob/master/License.txt</licenseUrl>
+    <projectUrl>https://github.com/fsharp/FsCheck</projectUrl>
+    <description>FsCheck is a tool for testing .NET programs automatically. The programmer provides
+a specification of the program, in the form of properties which functions, methods
+or objects should satisfy, and FsCheck then tests that the properties hold in a
+large number of randomly generated cases.
+    
+While writing the properties, you are actually writing a testable specification of your program.
+    
+Specifications are expressed in F#, C# or VB, using combinators defined
+in the FsCheck library. FsCheck provides combinators to define properties,
+observe the distribution of test data, and define test data generators.
+When a property fails, FsCheck automatically displays a minimal counter example.</description>
+    <summary>FsCheck is a tool for testing .NET programs automatically using randomly generated test cases.</summary>
+    <releaseNotes>Switch FsCheck.NUnit to use NUnit 3. This solves a lot of issues with NUnit 2's wonky plugin model.
+FsCheck.NUnit.Addin is no longer needed, for example, and neither is the install.ps1 in the FsCheck.NUnit package. Also,
+FsCheck.NUnit only needs a dependency on NUnit now, which should solve a bunch of install issues on its own.
+(like xUnit 2 support, another heroic contribution by Jon Hamm, and brilliantly pushed over the finish line by Mark Lambert.)
+NUnit versions &amp;lt; 3.0 are no longer supported. The latest FsCheck version that supports NUnit 2.6.4 is FsCheck.NUnit 2.6.3.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>test testing random fscheck quickcheck</tags>
+    <dependencies>
+      <dependency id="FSharp.Core" version="3.1.2.5" />
+    </dependencies>
+  </metadata>
+</package>

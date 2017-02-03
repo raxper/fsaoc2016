@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coreProperties xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.openxmlformats.org/package/2006/metadata/core-properties">
+  <dc:creator>Henrik Feldt,  Logibit AB,  formerly @mausch</dc:creator>
+  <dc:description>Expecto is a smooth test framework for F#, cloned from Fuchu with added functionality for making it easier to use.</dc:description>
+  <dc:identifier>Expecto.BenchmarkDotNet</dc:identifier>
+  <version>3.2.1</version>
+  <keywords>testing fsharp assert expect</keywords>
+  <lastModifiedBy>NuGet, Version=3.5.0.1996, Culture=neutral, PublicKeyToken=31bf3856ad364e35;Unix 15.6.0.0;.NET Framework 4.5</lastModifiedBy>
+</coreProperties>

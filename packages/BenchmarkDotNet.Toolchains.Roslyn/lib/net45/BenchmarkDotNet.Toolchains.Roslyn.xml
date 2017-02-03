@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BenchmarkDotNet.Toolchains.Roslyn</name>
+    </assembly>
+    <members>
+        <member name="T:BenchmarkDotNet.Toolchains.RoslynToolchain">
+            <summary>
+            Build a benchmark program with the Roslyn compiler.
+            </summary>
+        </member>
+        <member name="M:BenchmarkDotNet.Toolchains.RoslynToolchain.#ctor">
+            <summary>
+            Creates new instance of RoslynToolchain.
+            </summary>
+        </member>
+    </members>
+</doc>
