@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Streams</id>
+    <version>0.4.1</version>
+    <title>Streams</title>
+    <authors>Nick Palladinos,  Kostas Rontogiannis</authors>
+    <owners>Nick Palladinos,  Kostas Rontogiannis</owners>
+    <licenseUrl>https://github.com/nessos/Streams/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>http://nessos.github.io/Streams</projectUrl>
+    <iconUrl>https://avatars1.githubusercontent.com/u/5538081</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A lightweight F#/C# library for efficient functional-style pipelines on streams of data.</description>
+    <summary>A lightweight F#/C# library for efficient functional-style pipelines on streams of data.</summary>
+    <releaseNotes>New ParStream functinos sortByDescending/sortByUsing</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>F#/C# Streams</tags>
+  </metadata>
+</package>
