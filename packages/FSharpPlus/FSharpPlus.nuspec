@@ -1,20 +1,28 @@
-<?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>FSharpPlus</id>
-    <version>0.0.4</version>
+    <version>1.0.0-CI00078</version>
     <title>FSharpPlus</title>
     <authors>Gusty</authors>
     <owners>Gusty</owners>
-    <licenseUrl>http://www.apache.org/licenses/</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/gmpl/FSharpPlus/blob/master/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/gmpl/FSharpPlus</projectUrl>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>F#+ is a library with extensions for F# based on FsControl.</description>
-    <releaseNotes>Version 0.0.4</releaseNotes>
-    <copyright>Copyright 2013-2014</copyright>
+    <iconUrl>https://raw.github.com/gmpl/FSharpPlus/master/docs/files/img/logo.png</iconUrl>
+    <description>F#+ is an overload library for F#.</description>
+    <summary>F#+ is an overload library for F#.</summary>
+    <releaseNotes>Builders support MPlus and FX computations
+Bin path for sample files corrected
+Added Delay implementation for Cont
+Added Invokables for builders: TryWith, TryFinally and Using
+Fix overloads for Task
+Improve functor's map resolution in presence of interfaces
+Generalize Unzip to any functor</releaseNotes>
+    <copyright>Copyright 2015</copyright>
     <tags>FSharp Applicative Monad MonadTransformer Arrow Overloading</tags>
     <dependencies>
-      <dependency id="FsControl" version="1.0.9" />
+      <dependency id="FSharp.Core" />
     </dependencies>
   </metadata>
 </package>

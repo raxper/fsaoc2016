@@ -1,6 +1,6 @@
 NUGET
   remote: https://www.nuget.org/api/v2
-    FsControl (1.0.9)
-    FSharpPlus (0.0.4)
-      FsControl (>= 1.0.9)
+    FSharp.Core (4.0.0.1)
+    FSharpPlus (1.0.0-CI00078)
+      FSharp.Core
     Streams (0.4.1)
