@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>FsControl</id>
+    <version>1.0.9</version>
+    <title>FsControl</title>
+    <authors>Gusty</authors>
+    <owners>Gusty</owners>
+    <licenseUrl>http://www.apache.org/licenses/</licenseUrl>
+    <projectUrl>https://github.com/gmpl/FsControl</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>FsControl is an overload library for F#.</description>
+    <releaseNotes>Version 1.0.9</releaseNotes>
+    <copyright>Copyright 2012-2014</copyright>
+    <tags>FSharp Applicative Monad MonadTransformer Arrow Overloading</tags>
+    <dependencies />
+  </metadata>
+</package>

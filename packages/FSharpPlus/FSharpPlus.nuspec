@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>FSharpPlus</id>
+    <version>0.0.4</version>
+    <title>FSharpPlus</title>
+    <authors>Gusty</authors>
+    <owners>Gusty</owners>
+    <licenseUrl>http://www.apache.org/licenses/</licenseUrl>
+    <projectUrl>https://github.com/gmpl/FSharpPlus</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>F#+ is a library with extensions for F# based on FsControl.</description>
+    <releaseNotes>Version 0.0.4</releaseNotes>
+    <copyright>Copyright 2013-2014</copyright>
+    <tags>FSharp Applicative Monad MonadTransformer Arrow Overloading</tags>
+    <dependencies>
+      <dependency id="FsControl" version="1.0.9" />
+    </dependencies>
+  </metadata>
+</package>

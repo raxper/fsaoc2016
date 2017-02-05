@@ -78,3 +78,15 @@ let md5 (msg: string) =
     ()
 
   msg
+
+let x = 
+  let f1 i = i + 5
+  let f2 i = i - 10
+  let f3 i = i + 15
+  let f4 i = i - 20
+  seq {
+    for i = 1 to 16 do yield f1
+    for i = 1 to 16 do yield f2
+    for i = 1 to 16 do yield f3
+    for i = 1 to 16 do yield f4
+  }
