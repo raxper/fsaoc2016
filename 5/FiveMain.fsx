@@ -79,3 +79,4 @@ let md5 (msg: string) =
 
   msg
 
+// TODO: Try to mimic haskell implementation on rosettacode
