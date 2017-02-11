@@ -3,4 +3,6 @@ NUGET
     FSharp.Core (4.0.0.1)
     FSharpPlus (1.0.0-CI00078)
       FSharp.Core
+    FSharpx.Collections (1.15.2)
+      FSharp.Core
     Streams (0.4.1)
