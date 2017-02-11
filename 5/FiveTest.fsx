@@ -1,5 +1,8 @@
 (*
-#load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveTest.fsx";; open FiveMain;; open FiveTest;;
+#load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveTest.fsx";; 
+#load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveMain.fsx";; 
+open FiveMain;; 
+open FiveTest;;
 *)
 #load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveMain.fsx"
 open FiveMain

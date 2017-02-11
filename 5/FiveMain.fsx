@@ -1,5 +1,8 @@
 (*
-#load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveTest.fsx";; open FiveMain;; open FiveTest;;
+#load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveTest.fsx";; 
+#load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveMain.fsx";; 
+open FiveMain;; 
+open FiveTest;;
 *)
 
 (*
@@ -156,16 +159,38 @@ let md5plus md5 (bs:byte[]) =
   let md5' = List.fold (md5round datA) md5 [0..63]
   {a=a+md5'.a; b=b+md5'.b; c=c+md5'.c; d=d+md5'.d}
 
-let padMessage msg =
+let padMessage (msgString:string) =
+  let msg = System.Text.Encoding.ASCII.GetBytes msgString
+  let msgLen = Array.length msg
+
+  // no of padding bits for 448 mod 512
   let pad = 
-    let calc = ((448 - ((8 * Array.length msg) % 512)) + 512) % 512
+    let calc = ((448 - ((8 * msgLen) % 512)) + 512) % 512
     if calc = 0 then 512u else uint32 calc
-  let sizeMsgBuf = (Array.length msg |> uint32) + (pad/8u) + 8u
-  let sizeMsg = Array.length msg * 8 |> uint64
-  let bMsg = Array.init
+  
+  // buffer size in multiple of bytes
+  let sizeMsgBuf = (uint32 msgLen) + (pad/8u) + 8u
 
+  // buffer size in multiple of bytes
+  let sizeMsg = msgLen * 8 |> uint64
 
-  msg
+  // buffer to hold bits
+  let bMsg = Array.create 64 0uy
+
+  // Copy string to buffer
+  for i = 0 to msgLen - 1 do 
+    Array.set bMsg i msg.[i]
+
+  // making first bit of padding 1
+  Array.set bMsg msgLen (bMsg.[msgLen] ||| 0x80uy)
+
+  // write the size value
+  for i = 8 downto 1 do
+    Array.set bMsg ((int sizeMsgBuf)-i) 
+      (((sizeMsg >>> ((8-i)*8)) &&& 0x00000000000000ffUL) |> byte)
+
+  System.Text.Encoding.ASCII.GetString bMsg
+
 
 let md5sum (msg: string) =
 
