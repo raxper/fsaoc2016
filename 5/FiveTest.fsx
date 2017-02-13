@@ -7,31 +7,59 @@ open FiveTest;;
 #load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveMain.fsx"
 open FiveMain
 
-(* 
-  What i've learned:
-  - this only has 64 elements
-  - It has 16 f1's, then 16 f2's, etc.
-  - It may be worthwhile to try out FSharpPlus
-*)
-let f1 i = i + 5
-let f2 i = i - 10
-let f3 i = i + 15
-let f4 i = i - 20
+let md5ootb (msg: string) =
+  use md5 = System.Security.Cryptography.MD5.Create()
+  msg
+  |> System.Text.Encoding.ASCII.GetBytes
+  |> md5.ComputeHash
+  |> Seq.map (fun c -> c.ToString("X2"))
+  |> Seq.reduce ( + )
 
+let md5test1 =
+  let str = ""
+  let x = md5sum str
+  let y = md5ootb str
+  if x = y then printfn "md5sum %s: %s" str x; true
+  else failwith (sprintf "md5test1 \"%s\": %s" str x)
 
-let t1 = 
-  [
-    for i = 1 to 16 do yield 0
-    for i = 1 to 16 do yield 1
-    for i = 1 to 16 do yield 2
-    for i = 1 to 16 do yield 3 
-  ]
+let md5test2 =
+  let str = "a"
+  let x = md5sum str
+  let y = md5ootb str
+  if x = y then printfn "md5sum %s: %s" str x; true
+  else failwith (sprintf "md5test1 \"%s\": %s" str x)
 
-#r @"C:\Users\SVShah\Projects\fsaoc2016\packages\FSharpPlus\lib\net40\FSharpPlus.dll"
-module FSPO = FSharpPlus.Operators
-module FSPE = FSharpPlus.Extensions
+let md5test3 =
+  let str = "abc"
+  let x = md5sum str
+  let y = md5ootb str
+  if x = y then printfn "md5sum %s: %s" str x; true
+  else failwith (sprintf "md5test1 \"%s\": %s" str x)
 
-let t2 = 
-  [0; 1; 2; 3]
-  |> FSPO.map (List.replicate 16)
-  |> FSPO.concat
+let md5test4 =
+  let str = "message digest"
+  let x = md5sum str
+  let y = md5ootb str
+  if x = y then printfn "md5sum %s: %s" str x; true
+  else failwith (sprintf "md5test1 \"%s\": %s" str x)
+
+let md5test5 =
+  let str = "abcdefghijklmnopqrstuvwxyz"
+  let x = md5sum str
+  let y = md5ootb str
+  if x = y then printfn "md5sum %s: %s" str x; true
+  else failwith (sprintf "md5test1 \"%s\": %s" str x)
+
+let md5test6 =
+  let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  let x = md5sum str
+  let y = md5ootb str
+  if x = y then printfn "md5sum %s: %s" str x; true
+  else failwith (sprintf "md5test1 \"%s\": %s" str x)
+
+let md5test7 =
+  let str = "12345678901234567890123456789012345678901234567890123456789012345678901234567890"
+  let x = md5sum str
+  let y = md5ootb str
+  if x = y then printfn "md5sum %s: %s" str x; true
+  else failwith (sprintf "md5test1 \"%s\": %s" str x)

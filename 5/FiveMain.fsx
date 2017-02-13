@@ -26,8 +26,6 @@ Given the actual Door ID, what is the password?
 Your puzzle input is cxdnnyjw.
 *)
 
-#r @"C:\Users\SVShah\Projects\fsaoc2016\packages\FSharpx.Collections\lib\net40\FSharpx.Collections.dll"
-open FSharpx.Collections
 
 // MD5 algorithm
 // https://tools.ietf.org/html/rfc1321 
@@ -46,9 +44,9 @@ funH x y z = x `xor` y `xor` z
 funI x y z = y `xor` (complement z .|. x)
 *)
 let funF x y z : uint32 = (x &&& y) ||| (~~~x &&& z)
-let funG x y z : uint32 = (x &&& z) ||| (~~~z &&& y)
+let funG x y z : uint32 = (z &&& x) ||| (~~~z &&& y)
 let funH x y z : uint32 = x ^^^ y ^^^ z
-let funI x y z : uint32 = y ^^^ (~~~z ||| x)
+let funI x y z : uint32 = y ^^^ (x ||| ~~~z)
 
 (* 
 idxF, idxG, idxH, idxI :: Int -> Int
@@ -58,9 +56,9 @@ idxH i = (3 * i + 5) `mod` 16
 idxI i = 7 * i `mod` 16
 *)
 let idxF i : int = i
-let idxG i = (5 * i + 1) % 16
-let idxH i = (3 * i + 5) % 16
-let idxI i = 7 * i % 16
+let idxG i = (5*i + 1) % 16
+let idxH i = (3*i + 5) % 16
+let idxI i = (7*i) % 16
 
 // /////////////////////////////////////////////////////////////////////////////
 // Define Arrays
@@ -90,15 +88,16 @@ let idxA =
   |> List.collect (List.replicate 16)
   |> List.map2 (fun idx func -> func idx) [0..63]
 
+/// specifies the per-round shift amounts
 let rotA : int list =
   [[7; 12; 17; 22]; [5; 9; 14; 20]; [4; 11; 16; 23]; [6; 10; 15; 21]]
   |> List.collect (List.replicate 4)
   |> List.concat
 
-/// floor(2^32 × abs(sin(i + 1)))
+/// for i in 0 to 63 do floor(2^32 × abs(sin(i + 1)))
+/// Use binary integer part of the sines of integers (Radians) as constants
 let sinA =
-  [1. .. 64.]
-  |> List.map (sin >> abs >> (( * ) (2.**32.)) >> floor >> uint32)
+  [1. .. 64.] |> List.map (sin >> abs >> (( * ) (2.**32.)) >> floor >> uint32)
 
 // /////////////////////////////////////////////////////////////////////////////
 // Define Logic
@@ -120,6 +119,14 @@ type MD5 =
     d : uint32
   }
 
+let initialMD5 =
+  {
+    a = 0x67452301u
+    b = 0xefcdab89u
+    c = 0x98badcfeu
+    d = 0x10325476u
+  }
+
 (*
 md5round :: Array Int Word32 -> MD5 -> Int -> MD5
 md5round datA (MD5 a b c d) i =
@@ -128,10 +135,12 @@ md5round datA (MD5 a b c d) i =
         a' =  b + (a + f b c d + w + sinA ! i) `rotateL` rotA ! i
     in MD5 d a' b c
 *)
+/// This is the "Main loop" in "Process the message in successive 512-bit chunks" that goes from 0 to 63. The process starts with the initial MD5 for each run of the loop from 0 to 63.
 let md5round (datA:uint32[]) {MD5.a=a; MD5.b=b; MD5.c=c; MD5.d=d} i =
+  let rotateL r x = (x<<<r) ||| (x>>>(32-r))
   let f = funA.[i]
   let w = datA.[idxA.[i]]
-  let a' = (b + (a + (f b c d) + w + sinA.[i])) <<< rotA.[i]
+  let a' = b + (a + (f b c d) + sinA.[i] + w |> rotateL rotA.[i])
   {a=d; b=a'; c=b; d=c}
 
 (*
@@ -142,56 +151,90 @@ md5@(MD5 a b c d) <+> bs =
         MD5 a' b' c' d' = foldl' (md5round datA) md5 [1..64]
     in MD5 (a + a') (b + b') (c + c') (d + d')
 *)
-let md5plus md5 (bs:byte[]) =
-  let a, b, c, d = md5.a, md5.b, md5.c, md5.d 
+/// This is the code that does 1 run-through (i.e. 1 512-bit chunk) of the "Process the message in successive 512-bit chunks" loop.
+let md5plus m (bs:byte[]) =
   let datA =
-    bs 
+    bs
     |> Array.chunkBySize 4
     |> Array.take 16
-    |> Array.map
-      (fun elts ->
-        match elts with
-        | [| var1; var2; var3; var4 |] -> 
-          0ul ||| (uint32 var1 <<< 24) ||| (uint32 var2 <<< 16) 
-            ||| (uint32 var3 <<< 8) ||| uint32 var4
-        | _ -> failwith "md5plus.datA"
-      )
-  let md5' = List.fold (md5round datA) md5 [0..63]
-  {a=a+md5'.a; b=b+md5'.b; c=c+md5'.c; d=d+md5'.d}
-
-let padMessage (msgString:string) =
-  let msg = System.Text.Encoding.ASCII.GetBytes msgString
-  let msgLen = Array.length msg
-
-  // no of padding bits for 448 mod 512
-  let pad = 
-    let calc = ((448 - ((8 * msgLen) % 512)) + 512) % 512
-    if calc = 0 then 512u else uint32 calc
+    |> Array.map (fun elt -> System.BitConverter.ToUInt32(elt, 0))
+  let m' = List.fold (md5round datA) m [0..63]
+  {a=m.a+m'.a; b=m.b+m'.b; c=m.c+m'.c; d=m.d+m'.d}
   
-  // buffer size in multiple of bytes
-  let sizeMsgBuf = (uint32 msgLen) + (pad/8u) + 8u
-
-  // buffer size in multiple of bytes
-  let sizeMsg = msgLen * 8 |> uint64
-
-  // buffer to hold bits
-  let bMsg = Array.create 64 0uy
-
-  // Copy string to buffer
-  for i = 0 to msgLen - 1 do 
-    Array.set bMsg i msg.[i]
-
-  // making first bit of padding 1
-  Array.set bMsg msgLen (bMsg.[msgLen] ||| 0x80uy)
-
-  // write the size value
-  for i = 8 downto 1 do
-    Array.set bMsg ((int sizeMsgBuf)-i) 
-      (((sizeMsg >>> ((8-i)*8)) &&& 0x00000000000000ffUL) |> byte)
-
-  System.Text.Encoding.ASCII.GetString bMsg
-
+let padMessage (msg:byte[]) =
+  let msgLen = Array.length msg
+  let msgLenInBits = (uint64 msgLen) * 8UL
+  let lastSegmentSize = let m = msgLen % 64 in if m = 0 then 64 else m
+  let pad =
+    Array.create 
+      (if lastSegmentSize >= 56 then (64 - lastSegmentSize + 64)
+      else 64 - lastSegmentSize)
+      0uy
+  Array.set pad 0 0x80uy 
+  for i = 0 to 7 do
+    Array.set 
+      pad
+      (Array.length pad - 8 + i)
+      ((msgLenInBits >>> (8*i)) |> byte)
+  Array.append msg pad 
 
 let md5sum (msg: string) =
+  System.Text.Encoding.ASCII.GetBytes msg
+  |> padMessage
+  |> Array.chunkBySize 64
+  |> Array.fold md5plus initialMD5
+  |> (fun {MD5.a=a; MD5.b=b; MD5.c=c; MD5.d=d} -> 
+    System.BitConverter.GetBytes a
+    |> (fun x -> Array.append x <| System.BitConverter.GetBytes b)
+    |> (fun x -> Array.append x <| System.BitConverter.GetBytes c)
+    |> (fun x -> Array.append x <| System.BitConverter.GetBytes d))
+  |> Array.map (sprintf "%02X")
+  |> Array.reduce ( + )
 
-  msg
+/// Hard-coded input from problem
+let day5part1input = "cxdnnyjw"
+/// Criteria for day 5, part 1 from problem
+let day5part1criteria = "00000"
+
+/// Day 5 Part 1
+let day5part1 input crit =
+  Seq.initInfinite (fun i -> input + string i)
+  |> Seq.map md5sum
+  |> Seq.filter (fun m -> m.StartsWith crit)
+  |> Seq.take 8
+  |> Seq.map (Seq.item 5 >> string)
+  |> Seq.reduce ( + )
+
+// Takes a while to run 
+// printfn "Day 5 Part 1: %s" (day5part1 day5part1input day5part1criteria)
+
+#r @"C:\Users\SVShah\Projects\fsaoc2016\packages\FSharp.Collections.ParallelSeq\lib\net40\FSharp.Collections.ParallelSeq.dll"
+open FSharp.Collections.ParallelSeq
+open System.Collections.Generic
+
+/// Day 5 Part 2 - this is wasteful but after spending a week on MD5, I don't care
+let day5part2 input =
+  let answer = Dictionary<char, char>(8)
+  let add (d:Dictionary<_,_>) kv = 
+    if not <| d.ContainsKey(fst kv) then 
+      d.Add(fst kv, snd kv)
+    else ()
+  let notComplete (d:Dictionary<_,_>) = d.Count < 8
+
+  Seq.initInfinite (fun i -> input + string i)
+  |> Seq.map md5sum
+  |> Seq.filter
+    (fun m -> 
+      m.[0] = '0' && m.[1] = '0' && m.[2] = '0' && m.[3] = '0' && m.[4] = '0'
+        && (m.[5] = '0' || m.[5] = '1' || m.[5] = '2' || m.[5] = '3' 
+        || m.[5] = '4' || m.[5] = '5' || m.[5] = '6' || m.[5] = '7'))
+  |> Seq.map (fun m -> m.[5], m.[6])
+  |> Seq.takeWhile (fun _ -> notComplete answer)
+  |> Seq.iter (fun m -> add answer m)
+
+  (answer.['0'] |> string) + (answer.['1'] |> string) + (answer.['2'] |> string)
+    + (answer.['3'] |> string) + (answer.['4'] |> string) 
+    + (answer.['5'] |> string) + (answer.['6'] |> string) 
+    + (answer.['7'] |> string)
+// C9E29889 is wrong
+// 999828EC is right

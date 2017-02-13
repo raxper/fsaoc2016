@@ -1,4 +1,2 @@
 source https://www.nuget.org/api/v2
-nuget FSharpPlus >= 1.0.0-CI00078
-nuget FSharpx.Collections
-nuget Streams
+nuget FSharp.Collections.ParallelSeq
