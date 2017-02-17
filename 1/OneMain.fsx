@@ -1,3 +1,7 @@
+(*
+#load @"c:\Users\SVShah\Projects\fsaoc2016\1\OneMain.fsx";; open OneMain;;
+*)
+
 open System.Text.RegularExpressions
 
 type Direction = 
