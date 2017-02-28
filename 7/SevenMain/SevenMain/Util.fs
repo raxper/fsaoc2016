@@ -3,6 +3,9 @@ module Util
 open System.IO
 open System.Text.RegularExpressions
 
+/// For debugging
+let tee f x = f x |> ignore; x
+
 /// Checks if a string contains a four-character sequence which consists of a pair of two different characters followed by the reverse of that pair
 let isABBA (str:string) =
   str 
@@ -28,8 +31,8 @@ let day7part1 filename =
   |> Seq.filter supportsTLS
   |> Seq.length
 
-/// An ABA is any three-character sequence which consists of the same character twice with a different character between them, such as xyx or aba. 
-let isABA str = 
+/// An ABA is any three-character sequence which consists of the same character twice with a different character between them, such as xyx or aba. This function's parameter is a single supernet string.
+let isABA (str:string) = 
   str
   |> Seq.windowed 3
   |> Seq.exists (fun x -> x.[0] = x.[2] && x.[0] <> x.[1])
@@ -43,6 +46,7 @@ let isBAB abas str =
     str
     |> Seq.windowed 3
     |> Seq.filter (fun x -> x.[0] = x.[2] && x.[0] <> x.[1])
+    |> Seq.map (System.String)
     |> Set.ofSeq
   abas
   |> Set.map convertABAtoBAB
@@ -50,7 +54,12 @@ let isBAB abas str =
   |> Set.count
   |> ( < ) 0
 
-
+/// Get all ABAs in a string. Runs on one supernet string at a time.
+let getABAs (str:string) = 
+  str
+  |> Seq.windowed 3
+  |> Seq.map (System.String)
+  |> Seq.filter isABA
 
 /// An IP supports SSL if it has an Area-Broadcast Accessor, or ABA, anywhere in the supernet sequences (outside any square bracketed sections), and a corresponding Byte Allocation Block, or BAB, anywhere in the hypernet sequences.
 let supportsSSL line = 
@@ -65,4 +74,14 @@ let supportsSSL line =
     |> Seq.cast<Match>
     |> Seq.map (fun x -> x.Value)
     |> Set.ofSeq
-  failwith "supportsSSL"
+  let abas =
+    supernetSeq
+    |> Seq.map getABAs
+    |> Seq.concat
+    |> Set.ofSeq
+  (Seq.exists isABA supernetSeq) && (Seq.exists (isBAB abas) hypernetSeq)
+
+let day7part2 filename =
+  File.ReadAllLines filename
+  |> Seq.filter supportsSSL
+  |> Seq.length
