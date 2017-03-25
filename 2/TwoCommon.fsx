@@ -6,10 +6,10 @@ let NO_VERTEX = "."
 [<RequireQualifiedAccessAttribute>]
 type Direction = | R | L | U | D
 module Direction =
-  let opposite = 
-    function | Direction.R -> Direction.L 
-             | Direction.L -> Direction.R 
-             | Direction.U -> Direction.D 
+  let opposite =
+    function | Direction.R -> Direction.L
+             | Direction.L -> Direction.R
+             | Direction.U -> Direction.D
              | Direction.D -> Direction.U
 
 /// Vertex
@@ -19,6 +19,8 @@ module Vertex =
   let create idx label = V(idx, label)
   let toInt = function | V(x, _) -> x
   let toString x = x.ToString()
+  let strToV lbl = Seq.find (fun (V(_, l)) -> l = lbl)
+  let intToV idx = Seq.find (fun (V(i, _)) -> i = idx)
 
 /// Edge
 type Edge = | E of Vertex * Direction * Vertex with
@@ -29,8 +31,6 @@ module Edge =
 
 /// Parse a string and return a list of vertices and edges.
 let parseBoard (strB:string)=
-  let strToV lbl = Seq.find (fun (V(_, l)) -> l = lbl)
-  let intToV idx = Seq.find (fun (V(i, _)) -> i = idx)
   let transpose rows =
     let numRowsO = Seq.length rows
     let numColsO = Seq.item 0 rows |> Seq.length
@@ -47,17 +47,21 @@ let parseBoard (strB:string)=
     |> Seq.map Seq.pairwise
     |> Seq.concat
     |> Seq.filter validEdge
-    |> Seq.map (fun (vl1, vl2) -> strToV vl1 verts, strToV vl2 verts)
+    |> Seq.map
+      (fun (vl1, vl2) -> Vertex.strToV vl1 verts, Vertex.strToV vl2 verts)
   let reverse (x, y) = y, x
 
   let rows = strB.Split('\n') |> Seq.map (Seq.map string)
   let cols = transpose rows
+
   let verts =
     rows |> Seq.concat |> Seq.filter ((<>) NO_VERTEX) |> Seq.mapi Vertex.create
+
   let redges = potentialEdges verts rows |> Seq.map (Edge.create Direction.R)
-  let ledges = potentialEdges verts rows |> Seq.map reverse 
+  let ledges = potentialEdges verts rows |> Seq.map reverse
                |> Seq.map (Edge.create Direction.L)
   let dedges = potentialEdges verts cols |> Seq.map (Edge.create Direction.D)
   let uedges = potentialEdges verts cols |> Seq.map reverse
                |> Seq.map (Edge.create Direction.U)
-  verts, Seq.append redges ledges |> Seq.append dedges |> Seq.append uedges
+  let edges = Seq.append redges ledges |> Seq.append dedges |> Seq.append uedges
+  verts, edges
