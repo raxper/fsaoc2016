@@ -52,15 +52,12 @@ type EdgeTest () =
     (not (isNull l1) && not (isNull l2))
       ==> (Edge.toString e = sprintf "%A->%A->%A" v1 d v2)
 
-type ParserTest () =
+type BoardTest () =
   static member TWVLHelper s1 s2 s3 s4 s5 =
     let s =
       sprintf "%s%s%s%s%s%s%s%s%s"
-        s1 (Environment.NewLine)
-        s2 (Environment.NewLine)
-        s3 (Environment.NewLine)
-        s4 (Environment.NewLine)
-        s5
+        s1 Environment.NewLine s2 Environment.NewLine s3 Environment.NewLine
+        s4 Environment.NewLine s5
     let longest =
       [s1; s2; s3; s4; s5]
       |> Seq.map Seq.length
@@ -68,13 +65,13 @@ type ParserTest () =
     longest =
       (
         s.Split([|Environment.NewLine|], StringSplitOptions.None)
-        |> Parser.transpose
+        |> Board.transpose
         |> Seq.length
       )
 
   static member TransposeWidthVsLength s1 s2 s3 s4 s5 =
     (not (isNull s1) && not (isNull s2) && not (isNull s3) && not (isNull s4) &&  not (isNull s5))
-      ==> (ParserTest.TWVLHelper s1 s2 s3 s4 s5)
+      ==> (BoardTest.TWVLHelper s1 s2 s3 s4 s5)
 
 (*
 let conf = { Config.Quick with MaxTest = 10000; MaxFail = 5000; Name = "10k" }

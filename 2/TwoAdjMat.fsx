@@ -1,4 +1,4 @@
-#load @"C:\Users\SVShah\odrive\Google Drive\Projects\fsaoc2016\2\TwoCommon.fsx"
+#load "./TwoCommon.fsx"
 open TwoCommon
 
 /// Adjacency matrix as a square matrix. Row = "from", column = "to"
