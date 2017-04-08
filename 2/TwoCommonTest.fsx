@@ -6,7 +6,6 @@ open TwoCommon
 open System
 
 type DirectionTest () =
-
   static member OppositeDirIsDiff (dir:Direction) =
     Direction.opposite dir <> dir
 
@@ -52,31 +51,38 @@ type EdgeTest () =
     (not (isNull l1) && not (isNull l2))
       ==> (Edge.toString e = sprintf "%A->%A->%A" v1 d v2)
 
-type BoardTest () =
-  static member TWVLHelper s1 s2 s3 s4 s5 =
-    let s =
-      sprintf "%s%s%s%s%s%s%s%s%s"
-        s1 Environment.NewLine s2 Environment.NewLine s3 Environment.NewLine
-        s4 Environment.NewLine s5
-    let longest =
-      [s1; s2; s3; s4; s5]
-      |> Seq.map Seq.length
-      |> Seq.max
-    longest =
-      (
-        s.Split([|Environment.NewLine|], StringSplitOptions.None)
-        |> Board.transpose
-        |> Seq.length
-      )
 
+
+type BoardTest () =
   static member TransposeWidthVsLength s1 s2 s3 s4 s5 =
-    (not (isNull s1) && not (isNull s2) && not (isNull s3) && not (isNull s4) &&  not (isNull s5))
-      ==> (BoardTest.TWVLHelper s1 s2 s3 s4 s5)
+    let tee f x = f x |> ignore; x
+    let TWVLHelper s1 s2 s3 s4 s5 =
+      let s =
+        sprintf "%s%s%s%s%s%s%s%s%s"
+          s1 Environment.NewLine s2 Environment.NewLine s3 Environment.NewLine
+          s4 Environment.NewLine s5
+      let longest =
+        [s1; s2; s3; s4; s5]
+        |> Seq.map Seq.length
+        |> Seq.max
+      longest =
+        (
+          s.Split([|Environment.NewLine|], StringSplitOptions.None)
+          |> Seq.map (Seq.map string)
+          |> Board.squareup
+          |> Board.transpose
+          |> Seq.length
+        )
+    let c1 =
+      not (isNull s1) && not (isNull s2) && not (isNull s3)
+      && not (isNull s4) &&  not (isNull s5)
+    c1 ==> (lazy (TWVLHelper s1 s2 s3 s4 s5))
 
 (*
-let conf = { Config.Quick with MaxTest = 10000; MaxFail = 5000; Name = "10k" }
-Check.All (conf, typeof<DirectionTest>)
-Check.All (conf, typeof<VertexTest>)
-Check.All (conf, typeof<EdgeTest>)
-Check.All (conf, typeof<ParserTest>)
+#load @"./TwoCommonTest.fsx"
+let conf = { FsCheck.Config.Quick with MaxTest = 10000; MaxFail = 5000; Name = "10k" }
+FsCheck.Check.All (conf, typeof<TwoCommonTest.DirectionTest>)
+FsCheck.Check.All (conf, typeof<TwoCommonTest.VertexTest>)
+FsCheck.Check.All (conf, typeof<TwoCommonTest.EdgeTest>)
+FsCheck.Check.All (conf, typeof<TwoCommonTest.BoardTest>)
 *)

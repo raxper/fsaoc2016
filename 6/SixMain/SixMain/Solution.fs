@@ -3,13 +3,14 @@ module Solution
 open System.IO
 
 /// Generic tee function for debugging purposes.
-let tee f x = f x |> ignore; x 
+let tee f x = f x |> ignore; x
 
-/// Gives the most frequent character in a particular position from all strings. If all the strings in the list are smaller in length than the specified position, this function will throw a System.ArgumentException. 
+
+/// Gives the most frequent character in a particular position from all strings. If all the strings in the list are smaller in length than the specified position, this function will throw a System.ArgumentException.
 /// pos is zero-based.
 let mostFreqentCharAt pos list =
     list
-    |> Seq.filter (fun line -> String.length line >= (pos+1)) 
+    |> Seq.filter (fun line -> String.length line >= (pos+1))
     |> Seq.map (Seq.item pos)
     |> Seq.countBy id
     |> Seq.sortByDescending snd
@@ -33,11 +34,11 @@ let day6part1 filename =
     }
     |> Seq.reduce ( + )
 
-/// Gives the least frequent character in a particular position from all strings. If all the strings in the list are smaller in length than the specified position, this function will throw a System.ArgumentException. 
+/// Gives the least frequent character in a particular position from all strings. If all the strings in the list are smaller in length than the specified position, this function will throw a System.ArgumentException.
 /// pos is zero-based.
 let leastFreqentCharAt pos list =
     list
-    |> Seq.filter (fun line -> String.length line >= (pos+1)) 
+    |> Seq.filter (fun line -> String.length line >= (pos+1))
     |> Seq.map (Seq.item pos)
     |> Seq.countBy id
     |> Seq.sortBy snd

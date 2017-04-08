@@ -3,13 +3,25 @@ let NOVERTEX = "."
 
 /// Direction
 [<RequireQualifiedAccessAttribute>]
-type Direction = | R | L | U | D
+type Direction = | R | L | U | D with
+  override x.ToString() =
+    match x with
+    | Direction.R -> "R"
+    | Direction.L -> "L"
+    | Direction.U -> "U"
+    | Direction.D -> "D"
 module Direction =
   let opposite =
     function | Direction.R -> Direction.L
              | Direction.L -> Direction.R
              | Direction.U -> Direction.D
              | Direction.D -> Direction.U
+  let toDirection =
+    function | "R" -> Direction.R
+             | "L" -> Direction.L
+             | "U" -> Direction.U
+             | "D" -> Direction.D
+             | _ -> failwith "Direction.toDirection: Unknown direction"
 
 /// Vertex
 type Vertex = | V of int * string with
@@ -29,7 +41,9 @@ module Edge =
   let create dir (v1, v2) = E(v1, dir, v2)
   let toString (e:Edge) = e.ToString()
 
-type Board = {vertices:seq<Vertex>; edges:seq<Edge>}
+type Board = {vertices:seq<Vertex>; edges:seq<Edge>} with
+  override x.ToString() =
+    sprintf "v: %A%se: %A" x.vertices System.Environment.NewLine x.edges
 module Board =
   // For Environment
   open System
@@ -61,9 +75,11 @@ module Board =
   /// Ensures that the board is a square and fills in blanks until it is. The parseBoard function requires a square board to work correctly.
   let squareup strs =
     seq {
+      let numRows = strs |> Seq.length
       let longestRow = strs |> Seq.map Seq.length |> Seq.max
-      for i = 0 to Seq.length strs-1 do
-        let curStr = Seq.item i strs
+      let squareSide = List.max [longestRow; numRows]
+      for i = 0 to squareSide-1 do
+        let curStr = if i < numRows then Seq.item i strs else Seq.singleton ""
         if Seq.length curStr = longestRow then
           yield curStr
         else
