@@ -43,6 +43,12 @@ module Edge =
   let create dir (v1, v2) = E(v1, dir, v2)
   let toString (e:Edge) = e.ToString()
 
+  let fromV (E(v1,_,_)) = v1
+
+  let toV (E(_,_,v2)) = v2
+
+  let direction (E(_,d,_)) = d
+
 type Board = {vertices:seq<Vertex>; edges:seq<Edge>} with
   override x.ToString() =
     sprintf "v: %A%se: %A" x.vertices System.Environment.NewLine x.edges

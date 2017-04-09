@@ -3,6 +3,7 @@
 #load "./TwoAdjMat.fsx"
 #load "./TwoEdgeList.fsx"
 #load "./TwoAdjList.fsx"
+#load "./TwoIndGraph.fsx"
 
 open FsCheck
 open TwoCommon
@@ -10,6 +11,7 @@ open System
 open TwoAdjMat
 open TwoEdgeList
 open TwoAdjList
+open TwoIndGraph
 open System.Diagnostics
 
 type DirectionTest () =
@@ -86,27 +88,26 @@ type BoardTest () =
     c1 ==> (lazy (TWVLHelper s1 s2 s3 s4 s5))
 
 type AdjacencyMatrixTest () =
-(*
-  static member AdjMatrixSquare9 () =
-    sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
-    |> Board.parseBoard
-    |> AdjacencyMatrix.create
-    |> printfn "AMSquare9%s%A" Environment.NewLine
-    true
+  // static member AdjMatrixSquare9 () =
+  //   sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+  //   |> Board.parseBoard
+  //   |> AdjacencyMatrix.create
+  //   |> printfn "AMSquare9%s%A" Environment.NewLine
+  //   true
 
-  static member AdjMatrixDiamond () =
-    sprintf
-      "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
-      NOVERTEX NOVERTEX Environment.NewLine
-      NOVERTEX Environment.NewLine
-      Environment.NewLine
-      NOVERTEX Environment.NewLine
-      NOVERTEX NOVERTEX
-    |> Board.parseBoard
-    |> AdjacencyMatrix.create
-    |> printfn "AMDiamond%s%A" Environment.NewLine
-    true
-*)
+  // static member AdjMatrixDiamond () =
+  //   sprintf
+  //     "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+  //     NOVERTEX NOVERTEX Environment.NewLine
+  //     NOVERTEX Environment.NewLine
+  //     Environment.NewLine
+  //     NOVERTEX Environment.NewLine
+  //     NOVERTEX NOVERTEX
+  //   |> Board.parseBoard
+  //   |> AdjacencyMatrix.create
+  //   |> printfn "AMDiamond%s%A" Environment.NewLine
+  //   true
+
   static member AMD2P1Test () =
     Solution.day2part1
       @"./d2p1_map" @"./input_text_test1"
@@ -132,27 +133,26 @@ type AdjacencyMatrixTest () =
       = "9A7DC"
 
 type EdgeListTest =
-(*
-  static member EdgeListSquare9 () =
-    sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
-    |> Board.parseBoard
-    |> EdgeList.create
-    |> printfn "ELSquare9%s%A" Environment.NewLine
-    true
+  // static member EdgeListSquare9 () =
+  //   sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+  //   |> Board.parseBoard
+  //   |> EdgeList.create
+  //   |> printfn "ELSquare9%s%A" Environment.NewLine
+  //   true
 
-  static member EdgeListDiamond () =
-    sprintf
-      "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
-      NOVERTEX NOVERTEX Environment.NewLine
-      NOVERTEX Environment.NewLine
-      Environment.NewLine
-      NOVERTEX Environment.NewLine
-      NOVERTEX NOVERTEX
-    |> Board.parseBoard
-    |> EdgeList.create
-    |> printfn "ELDiamond%s%A" Environment.NewLine
-    true
-*)
+  // static member EdgeListDiamond () =
+  //   sprintf
+  //     "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+  //     NOVERTEX NOVERTEX Environment.NewLine
+  //     NOVERTEX Environment.NewLine
+  //     Environment.NewLine
+  //     NOVERTEX Environment.NewLine
+  //     NOVERTEX NOVERTEX
+  //   |> Board.parseBoard
+  //   |> EdgeList.create
+  //   |> printfn "ELDiamond%s%A" Environment.NewLine
+  //   true
+
   static member ELD2P1Test () =
     Solution.day2part1
       @"./d2p1_map" @"./input_text_test1"
@@ -267,10 +267,55 @@ type AdjacencyListMapTest =
       AdjacencyListMap.create AdjacencyListMap.getNext
       = "9A7DC"
 
+type InductiveGraphTest =
+  // static member InductiveGraphSquare9 () =
+  //   sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+  //   |> Board.parseBoard
+  //   |> InductiveGraph.create
+  //   |> printfn "IGSquare9%s%A" Environment.NewLine
+  //   true
+
+  // static member InductiveGraphDiamond () =
+  //   sprintf
+  //     "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+  //     NOVERTEX NOVERTEX Environment.NewLine
+  //     NOVERTEX Environment.NewLine
+  //     Environment.NewLine
+  //     NOVERTEX Environment.NewLine
+  //     NOVERTEX NOVERTEX
+  //   |> Board.parseBoard
+  //   |> InductiveGraph.create
+  //   |> printfn "IGDiamond%s%A" Environment.NewLine
+  //   true
+
+  static member IGD2P1Test () =
+    Solution.day2part1
+      @"./d2p1_map" @"./input_text_test1"
+      InductiveGraph.create InductiveGraph.getNext
+      = "1985"
+
+  static member IGD2P2Test () =
+    Solution.day2part1
+      @"./d2p2_map" @"./input_text_test1"
+      InductiveGraph.create InductiveGraph.getNext
+      = "5DB3"
+
+  static member IGD2P1Solution () =
+    Solution.day2part1
+      @"./d2p1_map" @"./input_text"
+      InductiveGraph.create InductiveGraph.getNext
+      = "97289"
+
+  static member IGD2P2Solution () =
+    Solution.day2part1
+      @"./d2p2_map" @"./input_text"
+      InductiveGraph.create InductiveGraph.getNext
+      = "9A7DC"
+
 (*
 #load @"./TwoCommonTest.fsx"
-let conf = { FsCheck.Config.Quick with MaxTest = 10000; MaxFail = 5000; Name = "10k" }
-let conf1 = { FsCheck.Config.Quick with MaxTest = 1; MaxFail = 1; Name = "1" }
+let conf = { FsCheck.Config.Quick with MaxTest = 1000; MaxFail = 500; Name = "1k" }
+let conf1 = { FsCheck.Config.Quick with MaxTest = 100; MaxFail = 1; Name = "1" }
 
 FsCheck.Check.All (conf, typeof<TwoCommonTest.DirectionTest>)
 FsCheck.Check.All (conf, typeof<TwoCommonTest.VertexTest>)
@@ -295,10 +340,16 @@ aldtimer.Stop()
 let almtimer = System.Diagnostics.Stopwatch()
 almtimer.Start()
 FsCheck.Check.All (conf1, typeof<TwoCommonTest.AdjacencyListMapTest>)
-aldtimer.Stop()
+almtimer.Stop()
+
+let igtimer = System.Diagnostics.Stopwatch()
+igtimer.Start()
+FsCheck.Check.All (conf1, typeof<TwoCommonTest.InductiveGraphTest>)
+igtimer.Stop()
 
 printfn "Adjacency Matrix: %s" (amtimer.Elapsed.ToString())
 printfn "Edge List: %s" (eltimer.Elapsed.ToString())
 printfn "Adjancency List Dict: %s" (aldtimer.Elapsed.ToString())
 printfn "Adjancency List Map: %s" (almtimer.Elapsed.ToString())
+printfn "Inductive Graph: %s" (igtimer.Elapsed.ToString())
 *)

@@ -62,10 +62,7 @@ module AdjacencyListMap =
         Map.fold
           (fun acc k es ->
             acc + k.ToString() + "==>" +
-            (Seq.fold
-              (fun acc elt -> acc + elt.ToString() + ", ")
-              ""
-              es) +
+            (Seq.fold (fun acc elt -> acc + elt.ToString() + ", ") "" es) +
             System.Environment.NewLine)
           ""
           d
@@ -83,7 +80,7 @@ module AdjacencyListMap =
     AL(d, board)
 
   /// Tries to get a destination Vertex based on a source Vertex and a Direction. If the connection exists, it returns the destination Vertex. Otherwise, it returns the source Vertex.
-  let getNext al from dir : Vertex =
+  let getNext al from dir =
     match al with
     | AL(d,_) ->
       let es = Map.find from d

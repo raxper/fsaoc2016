@@ -1,37 +1,44 @@
-#load "./TwoCommon.fsx"
+#r @"./packages/Aether/lib/net45/Aether.dll"
+#r @"./packages/Hekate/lib/net45/Hekate.dll"
+#load @"./TwoCommon.fsx"
+
 open TwoCommon
+open Hekate
 
-/// Inductive graph is a way to represent a graph functionally.
+/// Inductive graph is a functional representation of a graph.
 module InductiveGraph =
-  // type EL =
-    // private | EL of Board with
-    // override m.ToString() =
-    //   match m with
-    //   | EL(b) ->
-    //     sprintf "Vertices: %A%sEdges: %A"
-    //       (b.vertices |> Seq.toList)
-    //       System.Environment.NewLine
-    //       (b.edges |> Seq.toList)
-
-  /// Add an edge.
-  let addEdge e am =
-    failwith "addEdge"
-
-  /// Add a list of edges.
-  let addEdges b am =
-    failwith "addEdges"
+  type IG =
+    private | IG of Graph<Vertex, string, Direction> * Board with
+    override m.ToString() =
+      match m with
+      | IG(g, b) -> sprintf "Inductive Graph:%s%A" System.Environment.NewLine g
 
   /// Create a new instance, given edges and vertices.
   let create board =
-    failwith "create"
+    Graph.create
+      (board.vertices
+      |> Seq.map (fun x -> x, Vertex.toString x)
+      |> Seq.toList)
+      (board.edges
+      |> Seq.map (fun x -> x |> Edge.fromV,
+                           x |> Edge.toV,
+                           x |> Edge.direction)
+      |> Seq.toList)
 
   /// Tries to get a destination Vertex based on a source Vertex and a Direction. If the connection exists, it returns the destination Vertex. Otherwise, it returns the source Vertex.
-  let getNext am from dir =
-    failwith "getNext"
+  let getNext ig from dir =
+    match Graph.Nodes.successors from ig with
+    | None -> from
+    | Some succs ->
+      succs
+      |> List.tryFind (fun (_,d) -> d = dir)
+      |> function
+        | None -> from
+        | Some (dest,_) -> dest
 
 (*
-#load @"./asdf.fsx"
-open asdf
+#load @"./TwoIndGraph.fsx"
+open TwoIndGraph
 /// Solution 1
 Solution.day2part1 @"./d2p1_map" @"./input_text" asdf.create asdf.getNext
 
