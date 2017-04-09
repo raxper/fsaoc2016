@@ -314,42 +314,19 @@ type InductiveGraphTest =
 
 (*
 #load @"./TwoCommonTest.fsx"
-let conf = { FsCheck.Config.Quick with MaxTest = 1000; MaxFail = 500; Name = "1k" }
-let conf1 = { FsCheck.Config.Quick with MaxTest = 100; MaxFail = 1; Name = "1" }
 
+let conf = { FsCheck.Config.Quick with MaxTest = 10000; MaxFail = 1000 }
 FsCheck.Check.All (conf, typeof<TwoCommonTest.DirectionTest>)
 FsCheck.Check.All (conf, typeof<TwoCommonTest.VertexTest>)
 FsCheck.Check.All (conf, typeof<TwoCommonTest.EdgeTest>)
 FsCheck.Check.All (conf, typeof<TwoCommonTest.BoardTest>)
 
-let amtimer = System.Diagnostics.Stopwatch()
-amtimer.Start()
+let conf1 = { FsCheck.Config.Quick with MaxTest = 100; MaxFail = 1 }
+#time
 FsCheck.Check.All (conf1, typeof<TwoCommonTest.AdjacencyMatrixTest>)
-amtimer.Stop()
-
-let eltimer = System.Diagnostics.Stopwatch()
-eltimer.Start()
 FsCheck.Check.All (conf1, typeof<TwoCommonTest.EdgeListTest>)
-eltimer.Stop()
-
-let aldtimer = System.Diagnostics.Stopwatch()
-aldtimer.Start()
 FsCheck.Check.All (conf1, typeof<TwoCommonTest.AdjacencyListDictTest>)
-aldtimer.Stop()
-
-let almtimer = System.Diagnostics.Stopwatch()
-almtimer.Start()
 FsCheck.Check.All (conf1, typeof<TwoCommonTest.AdjacencyListMapTest>)
-almtimer.Stop()
-
-let igtimer = System.Diagnostics.Stopwatch()
-igtimer.Start()
 FsCheck.Check.All (conf1, typeof<TwoCommonTest.InductiveGraphTest>)
-igtimer.Stop()
-
-printfn "Adjacency Matrix: %s" (amtimer.Elapsed.ToString())
-printfn "Edge List: %s" (eltimer.Elapsed.ToString())
-printfn "Adjancency List Dict: %s" (aldtimer.Elapsed.ToString())
-printfn "Adjancency List Map: %s" (almtimer.Elapsed.ToString())
-printfn "Inductive Graph: %s" (igtimer.Elapsed.ToString())
+#time
 *)
