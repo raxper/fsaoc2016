@@ -59,25 +59,12 @@ module AdjacencyMatrix =
         | Some idx -> Seq.item idx b.vertices
         | None -> from
 
-module TwoAdjMatSolution =
-  open System.Text.RegularExpressions
-  open System.IO
+(*
+#load @"./TwoAdjMat.fsx"
+open TwoAdjMat
+/// Solution 1
+Solution.day2part1 @"./d2p1_map" @"./input_text" AdjacencyMatrix.create AdjacencyMatrix.getNext
 
-  let moveAll func start instr = V(0, "0")
-
-  let day2part1 boardFile instrFile =
-    let board =
-      seq {
-        let lines = File.ReadAllLines boardFile
-        for i = 0 to Seq.length lines - 1 do
-          yield Seq.item i lines
-          yield System.Environment.NewLine
-      }
-      |> Seq.fold ( + ) ""
-      |> Board.parseBoard
-    let am = AdjacencyMatrix.create board
-    File.ReadAllLines instrFile
-    |> Seq.map
-      (moveAll (AdjacencyMatrix.getNext am) (Vertex.strToV "5" board.vertices))
-    |> Seq.map Vertex.toString
-    |> Seq.reduce ( + )
+/// Solution 2
+Solution.day2part1 @"./d2p2_map" @"./input_text" AdjacencyMatrix.create AdjacencyMatrix.getNext
+*)

@@ -36,7 +36,9 @@ module Vertex =
 /// Edge
 type Edge = | E of Vertex * Direction * Vertex with
   override x.ToString() =
-    match x with E(v1, d, v2) -> sprintf "%A->%A->%A" v1 d v2
+    match x with
+    | E(v1, d, v2) ->
+      sprintf "%s->%s->%s" (v1.ToString()) (d.ToString()) (v2.ToString())
 module Edge =
   let create dir (v1, v2) = E(v1, dir, v2)
   let toString (e:Edge) = e.ToString()
@@ -110,3 +112,41 @@ module Board =
       |> Seq.append uedges
 
     {vertices = verts; edges = edges}
+
+module Solution =
+  open System.Text.RegularExpressions
+  open System.IO
+
+  let moveAll func (startv:Vertex) instrs =
+    Seq.fold func startv instrs
+
+  let day2part1 boardFile instrFile bCreateF bGetNextF=
+    let board =
+      seq {
+        let lines = File.ReadAllLines boardFile
+        for i = 0 to Seq.length lines - 1 do
+          yield Seq.item i lines
+          yield System.Environment.NewLine
+      }
+      |> Seq.fold ( + ) ""
+      |> Board.parseBoard
+    let am = bCreateF board
+    let instrs =
+      File.ReadAllLines instrFile
+      |> Seq.map
+        ((fun x -> (Regex.Match (x, @"[ULRD]+")).Value)
+        >> (fun x -> Regex.Matches(x, @"."))
+        >> Seq.cast
+        >> Seq.map
+          (fun (x:System.Text.RegularExpressions.Match) ->
+            x.Value |> Direction.toDirection))
+    instrs
+    |> Seq.mapFold
+      (fun sv iline ->
+        let ans = moveAll (bGetNextF am) sv iline
+        Vertex.toString ans, ans
+      )
+      (Vertex.strToV "5" board.vertices)
+    |> fst
+    |> Seq.reduce ( + )
+

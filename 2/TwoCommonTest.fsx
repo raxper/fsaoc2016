@@ -1,9 +1,16 @@
 #r @"./packages/FsCheck/lib/net452/FsCheck.dll"
 #load "./TwoCommon.fsx"
+#load "./TwoAdjMat.fsx"
+#load "./TwoEdgeList.fsx"
+#load "./TwoAdjList.fsx"
 
 open FsCheck
 open TwoCommon
 open System
+open TwoAdjMat
+open TwoEdgeList
+open TwoAdjList
+open System.Diagnostics
 
 type DirectionTest () =
   static member OppositeDirIsDiff (dir:Direction) =
@@ -78,11 +85,220 @@ type BoardTest () =
       && not (isNull s4) &&  not (isNull s5)
     c1 ==> (lazy (TWVLHelper s1 s2 s3 s4 s5))
 
+type AdjacencyMatrixTest () =
+(*
+  static member AdjMatrixSquare9 () =
+    sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+    |> Board.parseBoard
+    |> AdjacencyMatrix.create
+    |> printfn "AMSquare9%s%A" Environment.NewLine
+    true
+
+  static member AdjMatrixDiamond () =
+    sprintf
+      "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+      NOVERTEX NOVERTEX Environment.NewLine
+      NOVERTEX Environment.NewLine
+      Environment.NewLine
+      NOVERTEX Environment.NewLine
+      NOVERTEX NOVERTEX
+    |> Board.parseBoard
+    |> AdjacencyMatrix.create
+    |> printfn "AMDiamond%s%A" Environment.NewLine
+    true
+*)
+  static member AMD2P1Test () =
+    Solution.day2part1
+      @"./d2p1_map" @"./input_text_test1"
+      AdjacencyMatrix.create AdjacencyMatrix.getNext
+      = "1985"
+
+  static member AMD2P2Test () =
+    Solution.day2part1
+      @"./d2p2_map" @"./input_text_test1"
+      AdjacencyMatrix.create AdjacencyMatrix.getNext
+      = "5DB3"
+
+  static member AMD2P1Solution () =
+    Solution.day2part1
+      @"./d2p1_map" @"./input_text"
+      AdjacencyMatrix.create AdjacencyMatrix.getNext
+      = "97289"
+
+  static member AMD2P2Solution () =
+    Solution.day2part1
+      @"./d2p2_map" @"./input_text"
+      AdjacencyMatrix.create AdjacencyMatrix.getNext
+      = "9A7DC"
+
+type EdgeListTest =
+(*
+  static member EdgeListSquare9 () =
+    sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+    |> Board.parseBoard
+    |> EdgeList.create
+    |> printfn "ELSquare9%s%A" Environment.NewLine
+    true
+
+  static member EdgeListDiamond () =
+    sprintf
+      "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+      NOVERTEX NOVERTEX Environment.NewLine
+      NOVERTEX Environment.NewLine
+      Environment.NewLine
+      NOVERTEX Environment.NewLine
+      NOVERTEX NOVERTEX
+    |> Board.parseBoard
+    |> EdgeList.create
+    |> printfn "ELDiamond%s%A" Environment.NewLine
+    true
+*)
+  static member ELD2P1Test () =
+    Solution.day2part1
+      @"./d2p1_map" @"./input_text_test1"
+      EdgeList.create EdgeList.getNext
+      = "1985"
+
+  static member ELD2P2Test () =
+    Solution.day2part1
+      @"./d2p2_map" @"./input_text_test1"
+      EdgeList.create EdgeList.getNext
+      = "5DB3"
+
+  static member ELD2P1Solution () =
+    Solution.day2part1
+      @"./d2p1_map" @"./input_text"
+      EdgeList.create EdgeList.getNext
+      = "97289"
+
+  static member ELD2P2Solution () =
+    Solution.day2part1
+      @"./d2p2_map" @"./input_text"
+      EdgeList.create EdgeList.getNext
+      = "9A7DC"
+
+type AdjacencyListDictTest =
+  // static member AdjacencyListSquare9 () =
+  //   sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+  //   |> Board.parseBoard
+  //   |> AdjacencyListDict.create
+  //   |> printfn "ELSquare9%s%A" Environment.NewLine
+  //   true
+
+  // static member AdjacencyListDiamond () =
+  //   sprintf
+  //     "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+  //     NOVERTEX NOVERTEX Environment.NewLine
+  //     NOVERTEX Environment.NewLine
+  //     Environment.NewLine
+  //     NOVERTEX Environment.NewLine
+  //     NOVERTEX NOVERTEX
+  //   |> Board.parseBoard
+  //   |> AdjacencyListDict.create
+  //   |> printfn "ELDiamond%s%A" Environment.NewLine
+  //   true
+
+  static member ALDD2P1Test () =
+    Solution.day2part1
+      @"./d2p1_map" @"./input_text_test1"
+      AdjacencyListDict.create AdjacencyListDict.getNext
+      = "1985"
+
+  static member ALDD2P2Test () =
+    Solution.day2part1
+      @"./d2p2_map" @"./input_text_test1"
+      AdjacencyListDict.create AdjacencyListDict.getNext
+      = "5DB3"
+
+  static member ALDD2P1Solution () =
+    Solution.day2part1
+      @"./d2p1_map" @"./input_text"
+      AdjacencyListDict.create AdjacencyListDict.getNext
+      = "97289"
+
+  static member ALDD2P2Solution () =
+    Solution.day2part1
+      @"./d2p2_map" @"./input_text"
+      AdjacencyListDict.create AdjacencyListDict.getNext
+      = "9A7DC"
+
+type AdjacencyListMapTest =
+  // static member AdjacencyListSquare9 () =
+  //   sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+  //   |> Board.parseBoard
+  //   |> AdjacencyListMap.create
+  //   |> printfn "ELSquare9%s%A" Environment.NewLine
+  //   true
+
+  // static member AdjacencyListDiamond () =
+  //   sprintf
+  //     "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+  //     NOVERTEX NOVERTEX Environment.NewLine
+  //     NOVERTEX Environment.NewLine
+  //     Environment.NewLine
+  //     NOVERTEX Environment.NewLine
+  //     NOVERTEX NOVERTEX
+  //   |> Board.parseBoard
+  //   |> AdjacencyListMap.create
+  //   |> printfn "ELDiamond%s%A" Environment.NewLine
+  //   true
+
+  static member ALMD2P1Test () =
+    Solution.day2part1
+      @"./d2p1_map" @"./input_text_test1"
+      AdjacencyListMap.create AdjacencyListMap.getNext
+      = "1985"
+
+  static member ALMD2P2Test () =
+    Solution.day2part1
+      @"./d2p2_map" @"./input_text_test1"
+      AdjacencyListMap.create AdjacencyListMap.getNext
+      = "5DB3"
+
+  static member ALMD2P1Solution () =
+    Solution.day2part1
+      @"./d2p1_map" @"./input_text"
+      AdjacencyListMap.create AdjacencyListMap.getNext
+      = "97289"
+
+  static member ALMD2P2Solution () =
+    Solution.day2part1
+      @"./d2p2_map" @"./input_text"
+      AdjacencyListMap.create AdjacencyListMap.getNext
+      = "9A7DC"
+
 (*
 #load @"./TwoCommonTest.fsx"
 let conf = { FsCheck.Config.Quick with MaxTest = 10000; MaxFail = 5000; Name = "10k" }
+let conf1 = { FsCheck.Config.Quick with MaxTest = 1; MaxFail = 1; Name = "1" }
+
 FsCheck.Check.All (conf, typeof<TwoCommonTest.DirectionTest>)
 FsCheck.Check.All (conf, typeof<TwoCommonTest.VertexTest>)
 FsCheck.Check.All (conf, typeof<TwoCommonTest.EdgeTest>)
 FsCheck.Check.All (conf, typeof<TwoCommonTest.BoardTest>)
+
+let amtimer = System.Diagnostics.Stopwatch()
+amtimer.Start()
+FsCheck.Check.All (conf1, typeof<TwoCommonTest.AdjacencyMatrixTest>)
+amtimer.Stop()
+
+let eltimer = System.Diagnostics.Stopwatch()
+eltimer.Start()
+FsCheck.Check.All (conf1, typeof<TwoCommonTest.EdgeListTest>)
+eltimer.Stop()
+
+let aldtimer = System.Diagnostics.Stopwatch()
+aldtimer.Start()
+FsCheck.Check.All (conf1, typeof<TwoCommonTest.AdjacencyListDictTest>)
+aldtimer.Stop()
+
+let almtimer = System.Diagnostics.Stopwatch()
+almtimer.Start()
+FsCheck.Check.All (conf1, typeof<TwoCommonTest.AdjacencyListMapTest>)
+aldtimer.Stop()
+
+printfn "Adjacency Matrix: %s" (amtimer.Elapsed.ToString())
+printfn "Edge List: %s" (eltimer.Elapsed.ToString())
+printfn "Adjancency List Dict: %s" (aldtimer.Elapsed.ToString())
+printfn "Adjancency List Map: %s" (almtimer.Elapsed.ToString())
 *)
