@@ -126,7 +126,7 @@ module Solution =
   let moveAll func (startv:Vertex) instrs =
     Seq.fold func startv instrs
 
-  let day2part1 boardFile instrFile bCreateF bGetNextF=
+  let day2part1 boardFile instrFile bCreateF bGetNextF =
     let board =
       seq {
         let lines = File.ReadAllLines boardFile

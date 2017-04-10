@@ -88,25 +88,25 @@ type BoardTest () =
     c1 ==> (lazy (TWVLHelper s1 s2 s3 s4 s5))
 
 type AdjacencyMatrixTest () =
-  // static member AdjMatrixSquare9 () =
-  //   sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
-  //   |> Board.parseBoard
-  //   |> AdjacencyMatrix.create
-  //   |> printfn "AMSquare9%s%A" Environment.NewLine
-  //   true
+  static member AdjMatrixSquare9 () =
+    sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+    |> Board.parseBoard
+    |> AdjacencyMatrix.create
+    |> printfn "AMSquare9%s%A" Environment.NewLine
+    true
 
-  // static member AdjMatrixDiamond () =
-  //   sprintf
-  //     "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
-  //     NOVERTEX NOVERTEX Environment.NewLine
-  //     NOVERTEX Environment.NewLine
-  //     Environment.NewLine
-  //     NOVERTEX Environment.NewLine
-  //     NOVERTEX NOVERTEX
-  //   |> Board.parseBoard
-  //   |> AdjacencyMatrix.create
-  //   |> printfn "AMDiamond%s%A" Environment.NewLine
-  //   true
+  static member AdjMatrixDiamond () =
+    sprintf
+      "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+      NOVERTEX NOVERTEX Environment.NewLine
+      NOVERTEX Environment.NewLine
+      Environment.NewLine
+      NOVERTEX Environment.NewLine
+      NOVERTEX NOVERTEX
+    |> Board.parseBoard
+    |> AdjacencyMatrix.create
+    |> printfn "AMDiamond%s%A" Environment.NewLine
+    true
 
   static member AMD2P1Test () =
     Solution.day2part1
@@ -321,7 +321,7 @@ FsCheck.Check.All (conf, typeof<TwoCommonTest.VertexTest>)
 FsCheck.Check.All (conf, typeof<TwoCommonTest.EdgeTest>)
 FsCheck.Check.All (conf, typeof<TwoCommonTest.BoardTest>)
 
-let conf1 = { FsCheck.Config.Quick with MaxTest = 100; MaxFail = 1 }
+let conf1 = { FsCheck.Config.Quick with MaxTest = 1; MaxFail = 1 }
 #time
 FsCheck.Check.All (conf1, typeof<TwoCommonTest.AdjacencyMatrixTest>)
 FsCheck.Check.All (conf1, typeof<TwoCommonTest.EdgeListTest>)
