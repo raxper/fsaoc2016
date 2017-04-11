@@ -133,25 +133,25 @@ type AdjacencyMatrixTest () =
       = "9A7DC"
 
 type EdgeListTest =
-  // static member EdgeListSquare9 () =
-  //   sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
-  //   |> Board.parseBoard
-  //   |> EdgeList.create
-  //   |> printfn "ELSquare9%s%A" Environment.NewLine
-  //   true
+  static member EdgeListSquare9 () =
+    sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+    |> Board.parseBoard
+    |> EdgeList.create
+    |> printfn "ELSquare9%s%A" Environment.NewLine
+    true
 
-  // static member EdgeListDiamond () =
-  //   sprintf
-  //     "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
-  //     NOVERTEX NOVERTEX Environment.NewLine
-  //     NOVERTEX Environment.NewLine
-  //     Environment.NewLine
-  //     NOVERTEX Environment.NewLine
-  //     NOVERTEX NOVERTEX
-  //   |> Board.parseBoard
-  //   |> EdgeList.create
-  //   |> printfn "ELDiamond%s%A" Environment.NewLine
-  //   true
+  static member EdgeListDiamond () =
+    sprintf
+      "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+      NOVERTEX NOVERTEX Environment.NewLine
+      NOVERTEX Environment.NewLine
+      Environment.NewLine
+      NOVERTEX Environment.NewLine
+      NOVERTEX NOVERTEX
+    |> Board.parseBoard
+    |> EdgeList.create
+    |> printfn "ELDiamond%s%A" Environment.NewLine
+    true
 
   static member ELD2P1Test () =
     Solution.day2part1
@@ -178,25 +178,25 @@ type EdgeListTest =
       = "9A7DC"
 
 type AdjacencyListDictTest =
-  // static member AdjacencyListSquare9 () =
-  //   sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
-  //   |> Board.parseBoard
-  //   |> AdjacencyListDict.create
-  //   |> printfn "ELSquare9%s%A" Environment.NewLine
-  //   true
+  static member AdjacencyListSquare9 () =
+    sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+    |> Board.parseBoard
+    |> AdjacencyListDict.create
+    |> printfn "ELSquare9%s%A" Environment.NewLine
+    true
 
-  // static member AdjacencyListDiamond () =
-  //   sprintf
-  //     "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
-  //     NOVERTEX NOVERTEX Environment.NewLine
-  //     NOVERTEX Environment.NewLine
-  //     Environment.NewLine
-  //     NOVERTEX Environment.NewLine
-  //     NOVERTEX NOVERTEX
-  //   |> Board.parseBoard
-  //   |> AdjacencyListDict.create
-  //   |> printfn "ELDiamond%s%A" Environment.NewLine
-  //   true
+  static member AdjacencyListDiamond () =
+    sprintf
+      "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+      NOVERTEX NOVERTEX Environment.NewLine
+      NOVERTEX Environment.NewLine
+      Environment.NewLine
+      NOVERTEX Environment.NewLine
+      NOVERTEX NOVERTEX
+    |> Board.parseBoard
+    |> AdjacencyListDict.create
+    |> printfn "ELDiamond%s%A" Environment.NewLine
+    true
 
   static member ALDD2P1Test () =
     Solution.day2part1
@@ -223,25 +223,25 @@ type AdjacencyListDictTest =
       = "9A7DC"
 
 type AdjacencyListMapTest =
-  // static member AdjacencyListSquare9 () =
-  //   sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
-  //   |> Board.parseBoard
-  //   |> AdjacencyListMap.create
-  //   |> printfn "ELSquare9%s%A" Environment.NewLine
-  //   true
+  static member AdjacencyListSquare9 () =
+    sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+    |> Board.parseBoard
+    |> AdjacencyListMap.create
+    |> printfn "ELSquare9%s%A" Environment.NewLine
+    true
 
-  // static member AdjacencyListDiamond () =
-  //   sprintf
-  //     "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
-  //     NOVERTEX NOVERTEX Environment.NewLine
-  //     NOVERTEX Environment.NewLine
-  //     Environment.NewLine
-  //     NOVERTEX Environment.NewLine
-  //     NOVERTEX NOVERTEX
-  //   |> Board.parseBoard
-  //   |> AdjacencyListMap.create
-  //   |> printfn "ELDiamond%s%A" Environment.NewLine
-  //   true
+  static member AdjacencyListDiamond () =
+    sprintf
+      "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+      NOVERTEX NOVERTEX Environment.NewLine
+      NOVERTEX Environment.NewLine
+      Environment.NewLine
+      NOVERTEX Environment.NewLine
+      NOVERTEX NOVERTEX
+    |> Board.parseBoard
+    |> AdjacencyListMap.create
+    |> printfn "ELDiamond%s%A" Environment.NewLine
+    true
 
   static member ALMD2P1Test () =
     Solution.day2part1
@@ -268,25 +268,25 @@ type AdjacencyListMapTest =
       = "9A7DC"
 
 type InductiveGraphTest =
-  // static member InductiveGraphSquare9 () =
-  //   sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
-  //   |> Board.parseBoard
-  //   |> InductiveGraph.create
-  //   |> printfn "IGSquare9%s%A" Environment.NewLine
-  //   true
+  static member InductiveGraphSquare9 () =
+    sprintf "123%s456%s789" Environment.NewLine Environment.NewLine
+    |> Board.parseBoard
+    |> InductiveGraph.create
+    |> printfn "IGSquare9%s%A" Environment.NewLine
+    true
 
-  // static member InductiveGraphDiamond () =
-  //   sprintf
-  //     "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
-  //     NOVERTEX NOVERTEX Environment.NewLine
-  //     NOVERTEX Environment.NewLine
-  //     Environment.NewLine
-  //     NOVERTEX Environment.NewLine
-  //     NOVERTEX NOVERTEX
-  //   |> Board.parseBoard
-  //   |> InductiveGraph.create
-  //   |> printfn "IGDiamond%s%A" Environment.NewLine
-  //   true
+  static member InductiveGraphDiamond () =
+    sprintf
+      "%s%s1%s%s234%s56789%s%sABC%s%s%sD"
+      NOVERTEX NOVERTEX Environment.NewLine
+      NOVERTEX Environment.NewLine
+      Environment.NewLine
+      NOVERTEX Environment.NewLine
+      NOVERTEX NOVERTEX
+    |> Board.parseBoard
+    |> InductiveGraph.create
+    |> printfn "IGDiamond%s%A" Environment.NewLine
+    true
 
   static member IGD2P1Test () =
     Solution.day2part1

@@ -32,13 +32,11 @@ module AdjacencyListDict =
     AL(d, board)
 
   /// Tries to get a destination Vertex based on a source Vertex and a Direction. If the connection exists, it returns the destination Vertex. Otherwise, it returns the source Vertex.
-  let getNext al from dir : Vertex =
-    match al with
-    | AL(d,_) ->
-      let es = d.Item from
-      match Seq.tryFind (fun (E(_,d,_)) -> dir = d) es with
-      | Some (E(_,_,v2)) -> v2
-      | None -> from
+  let getNext (AL(d,_)) from dir : Vertex =
+    let es = d.Item from
+    match Seq.tryFind (fun (E(_,d,_)) -> dir = d) es with
+    | Some (E(_,_,v2)) -> v2
+    | None -> from
 
 (*
 #load @"./TwoAdjList.fsx"
@@ -80,10 +78,8 @@ module AdjacencyListMap =
     AL(d, board)
 
   /// Tries to get a destination Vertex based on a source Vertex and a Direction. If the connection exists, it returns the destination Vertex. Otherwise, it returns the source Vertex.
-  let getNext al from dir =
-    match al with
-    | AL(d,_) ->
-      let es = Map.find from d
-      match Seq.tryFind (fun (E(_,d,_)) -> dir = d) es with
-      | Some (E(_,_,v2)) -> v2
-      | None -> from
+  let getNext (AL(d,_)) from dir =
+    let es = Map.find from d
+    match Seq.tryFind (fun (E(_,d,_)) -> dir = d) es with
+    | Some (E(_,_,v2)) -> v2
+    | None -> from

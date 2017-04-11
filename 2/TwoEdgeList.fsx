@@ -12,15 +12,14 @@ module EdgeList =
           (b.edges
           |> Seq.map
             (fun (E(v1,d,v2)) ->
-              sprintf "%s%s%s" (v1.ToString()) (d.ToString()) (v2.ToString()))
+              sprintf "%s->%s->%s" (v1.ToString()) (d.ToString()) (v2.ToString()))
           |> Seq.toList)
 
   /// Create a new instance, given edges and vertices.
   let create board = EL(board)
 
   /// Tries to get a destination Vertex based on a source Vertex and a Direction. If the connection exists, it returns the destination Vertex. Otherwise, it returns the source Vertex.
-  let getNext el from dir =
-    let b = match el with | EL(b) -> b
+  let getNext (EL(b)) from dir =
     let destv =
       Seq.tryFind
         (fun (E(v1,d,v2)) -> v1 = from && d = dir)
