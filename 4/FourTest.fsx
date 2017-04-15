@@ -1,8 +1,8 @@
 (*
-#load @"c:\Users\SVShah\Projects\fsaoc2016\4\FourTest.fsx";; open FourMain;;
+#load @"./FourTest.fsx";; open FourMain;;
 *)
 
-#load @"c:\Users\SVShah\Projects\fsaoc2016\4\FourMain.fsx"
+#load @"./FourMain.fsx"
 open FourMain
 
 (** Tests for calculateChecksum **)
@@ -31,8 +31,8 @@ let d4p1Test = day4part1 = 158835
 if d4p1Test then printfn "d4p1Test: %b" d4p1Test else failwith "d4p1Test"
 
 /// qzmt-zixmtkozy-ivhz-343 = very encrypted name
-let scTest1 = 
-  @"qzmt-zixmtkozy-ivhz" 
+let scTest1 =
+  @"qzmt-zixmtkozy-ivhz"
   |> Seq.map (fun elt -> shiftCipher elt 343)
   |> System.String.Concat
   |> (=) @"very encrypted name"

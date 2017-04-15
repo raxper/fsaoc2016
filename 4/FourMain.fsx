@@ -1,5 +1,5 @@
 (*
-#load @"c:\Users\SVShah\Projects\fsaoc2016\4\FourTest.fsx";; open FourMain;;
+#load @"./FourTest.fsx";; open FourMain;;
 *)
 
 
@@ -25,7 +25,7 @@ open System.IO
 open System.Text.RegularExpressions
 
 /// The puzzle input
-let puzzleInput = @"4\puzzle_input.txt"
+let puzzleInput = @"./puzzle_input.txt"
 
 type Line = {
   line: string
@@ -42,48 +42,48 @@ let emptyLine = {
 
 /// Given a string of characters, returns the checksum (top 5 characters by frequency; ties are broken by alphabetization.  Strategy is to first sort by letters, then by count.  Both sorts are stable, so sorting by count will retain alphabetization when counts are the same
 let calculateChecksum (line: string) =
-  line 
+  line
   |> Seq.countBy id
   |> Seq.sortBy fst
   |> Seq.sortByDescending snd
   |> Seq.truncate 5
   |> Seq.fold (fun accum (elt, _) -> accum + elt.ToString()) ""
 
-let lines filename = 
-  File.ReadAllLines filename 
-  |> Seq.cast 
+let lines filename =
+  File.ReadAllLines filename
+  |> Seq.cast
   |> Seq.map (fun x -> {emptyLine with line = string x})
 
-let extractSectorIDs lines = 
-  lines 
-  |> Seq.map 
-    (fun l -> 
-    {l with 
-      sectorID = (Regex.Match (l.line, @"[0-9]+")).Groups.[0].Value |> int})
-
-let calculateChecksums lines = 
+let extractSectorIDs lines =
   lines
   |> Seq.map
-    (fun l -> 
-      {l with 
-        calculatedChecksum = 
-        (Regex.Matches (l.line, @"([a-zA-Z]+)\-")) 
-        |> Seq.cast 
-        |> Seq.map 
-          (fun (x : System.Text.RegularExpressions.Match) -> 
+    (fun l ->
+    {l with
+      sectorID = (Regex.Match (l.line, @"[0-9]+")).Groups.[0].Value |> int})
+
+let calculateChecksums lines =
+  lines
+  |> Seq.map
+    (fun l ->
+      {l with
+        calculatedChecksum =
+        (Regex.Matches (l.line, @"([a-zA-Z]+)\-"))
+        |> Seq.cast
+        |> Seq.map
+          (fun (x : System.Text.RegularExpressions.Match) ->
             let substr = x.Value
             substr.Substring(0, String.length substr - 1))
-        |> String.concat "" 
+        |> String.concat ""
         |> calculateChecksum
       }
     )
 
-let extractProvidedChecksums lines = 
+let extractProvidedChecksums lines =
   lines
   |> Seq.map
-    (fun l -> 
-      {l with 
-        providedChecksum = 
+    (fun l ->
+      {l with
+        providedChecksum =
         (Regex.Match (l.line, @"\[([a-zA-Z]+)\]")).Groups.[1].Value})
 
 let day4part1 =
@@ -108,7 +108,7 @@ For example, the real name for qzmt-zixmtkozy-ivhz-343 is very encrypted name.
 What is the sector ID of the room where North Pole objects are stored?
 *)
 
-/// Decrypts a single letter using the sector ID 
+/// Decrypts a single letter using the sector ID
 let shiftCipher (letter: char) shift =
   let asciiStart = 97
   let numChars = 26
@@ -117,7 +117,7 @@ let shiftCipher (letter: char) shift =
   if letter = '-' then ' '
   else letter |> charToInt |> (+) shift |> (fun x -> x % numChars) |> intToChar
 
-let day4part2 = 
+let day4part2 =
   lines puzzleInput
   |> extractSectorIDs
   |> extractProvidedChecksums
@@ -125,8 +125,8 @@ let day4part2 =
   |> Seq.filter (fun x -> x.calculatedChecksum = x.providedChecksum)
   |> Seq.map
     (fun l ->
-    {l with 
-      decryptedText = 
+    {l with
+      decryptedText =
       (Regex.Match (l.line, @"([a-zA-Z]+\-)+")).Groups.[0].Value
       |> Seq.map (fun elt -> shiftCipher elt l.sectorID)
       |> System.String.Concat
