@@ -1,7 +1,7 @@
 (*
-#load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveTest.fsx";; 
-#load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveMain.fsx";; 
-open FiveMain;; 
+#load @"./FiveTest.fsx";;
+#load @"./FiveMain.fsx";;
+open FiveMain;;
 open FiveTest;;
 *)
 
@@ -28,9 +28,9 @@ Your puzzle input is cxdnnyjw.
 
 
 // MD5 algorithm
-// https://tools.ietf.org/html/rfc1321 
-// https://en.wikipedia.org/wiki/MD5#Algorithm 
-// https://rosettacode.org/wiki/MD5/Implementation 
+// https://tools.ietf.org/html/rfc1321
+// https://en.wikipedia.org/wiki/MD5#Algorithm
+// https://rosettacode.org/wiki/MD5/Implementation
 
 // /////////////////////////////////////////////////////////////////////////////
 // Define Functions
@@ -48,7 +48,7 @@ let funG x y z : uint32 = (z &&& x) ||| (~~~z &&& y)
 let funH x y z : uint32 = x ^^^ y ^^^ z
 let funI x y z : uint32 = y ^^^ (x ||| ~~~z)
 
-(* 
+(*
 idxF, idxG, idxH, idxI :: Int -> Int
 idxF i = i
 idxG i = (5 * i + 1) `mod` 16
@@ -64,22 +64,22 @@ let idxI i = (7*i) % 16
 // Define Arrays
 // /////////////////////////////////////////////////////////////////////////////
 
-(* 
+(*
 funA :: Array Int Fun
 funA = listArray (1,64) $ replicate 16 =<< [funF, funG, funH, funI]
- 
+
 idxA :: Array Int Int
 idxA = listArray (1,64) $ zipWith ($) (replicate 16 =<< [idxF, idxG, idxH, idxI]) [0..63]
- 
+
 rotA :: Array Int Int
 rotA = listArray (1,64) $ concat . replicate 4 =<<
        [[7, 12, 17, 22], [5, 9, 14, 20], [4, 11, 16, 23], [6, 10, 15, 21]]
- 
+
 sinA :: Array Int Word32
 sinA = listArray (1,64) $ map (floor . ( * mult ) . abs . sin) [1..64]
     where mult = 2 ** 32 :: Double
 *)
-let funA : (uint32 -> uint32 -> uint32 -> uint32) list = 
+let funA : (uint32 -> uint32 -> uint32 -> uint32) list =
   [funF; funG; funH; funI]
   |> List.collect (List.replicate 16)
 
@@ -111,7 +111,7 @@ data MD5 = MD5
     , d :: {-# UNPACK #-} !Word32
     }
 *)
-type MD5 = 
+type MD5 =
   {
     a : uint32
     b : uint32
@@ -160,30 +160,30 @@ let md5plus m (bs:byte[]) =
     |> Array.map (fun elt -> System.BitConverter.ToUInt32(elt, 0))
   let m' = List.fold (md5round datA) m [0..63]
   {a=m.a+m'.a; b=m.b+m'.b; c=m.c+m'.c; d=m.d+m'.d}
-  
+
 let padMessage (msg:byte[]) =
   let msgLen = Array.length msg
   let msgLenInBits = (uint64 msgLen) * 8UL
   let lastSegmentSize = let m = msgLen % 64 in if m = 0 then 64 else m
   let pad =
-    Array.create 
+    Array.create
       (if lastSegmentSize >= 56 then (64 - lastSegmentSize + 64)
       else 64 - lastSegmentSize)
       0uy
-  Array.set pad 0 0x80uy 
+  Array.set pad 0 0x80uy
   for i = 0 to 7 do
-    Array.set 
+    Array.set
       pad
       (Array.length pad - 8 + i)
       ((msgLenInBits >>> (8*i)) |> byte)
-  Array.append msg pad 
+  Array.append msg pad
 
 let md5sum (msg: string) =
   System.Text.Encoding.ASCII.GetBytes msg
   |> padMessage
   |> Array.chunkBySize 64
   |> Array.fold md5plus initialMD5
-  |> (fun {MD5.a=a; MD5.b=b; MD5.c=c; MD5.d=d} -> 
+  |> (fun {MD5.a=a; MD5.b=b; MD5.c=c; MD5.d=d} ->
     System.BitConverter.GetBytes a
     |> (fun x -> Array.append x <| System.BitConverter.GetBytes b)
     |> (fun x -> Array.append x <| System.BitConverter.GetBytes c)
@@ -205,7 +205,7 @@ let day5part1 input crit =
   |> Seq.map (Seq.item 5 >> string)
   |> Seq.reduce ( + )
 
-// Takes a while to run 
+// Takes a while to run
 // printfn "Day 5 Part 1: %s" (day5part1 day5part1input day5part1criteria)
 
 #r @"C:\Users\SVShah\Projects\fsaoc2016\packages\FSharp.Collections.ParallelSeq\lib\net40\FSharp.Collections.ParallelSeq.dll"
@@ -215,8 +215,8 @@ open System.Collections.Generic
 /// Day 5 Part 2 - this is wasteful but after spending a week on MD5, I don't care
 let day5part2 input =
   let answer = Dictionary<char, char>(8)
-  let add (d:Dictionary<_,_>) kv = 
-    if not <| d.ContainsKey(fst kv) then 
+  let add (d:Dictionary<_,_>) kv =
+    if not <| d.ContainsKey(fst kv) then
       d.Add(fst kv, snd kv)
     else ()
   let notComplete (d:Dictionary<_,_>) = d.Count < 8
@@ -224,17 +224,17 @@ let day5part2 input =
   Seq.initInfinite (fun i -> input + string i)
   |> Seq.map md5sum
   |> Seq.filter
-    (fun m -> 
+    (fun m ->
       m.[0] = '0' && m.[1] = '0' && m.[2] = '0' && m.[3] = '0' && m.[4] = '0'
-        && (m.[5] = '0' || m.[5] = '1' || m.[5] = '2' || m.[5] = '3' 
+        && (m.[5] = '0' || m.[5] = '1' || m.[5] = '2' || m.[5] = '3'
         || m.[5] = '4' || m.[5] = '5' || m.[5] = '6' || m.[5] = '7'))
   |> Seq.map (fun m -> m.[5], m.[6])
   |> Seq.takeWhile (fun _ -> notComplete answer)
   |> Seq.iter (fun m -> add answer m)
 
   (answer.['0'] |> string) + (answer.['1'] |> string) + (answer.['2'] |> string)
-    + (answer.['3'] |> string) + (answer.['4'] |> string) 
-    + (answer.['5'] |> string) + (answer.['6'] |> string) 
+    + (answer.['3'] |> string) + (answer.['4'] |> string)
+    + (answer.['5'] |> string) + (answer.['6'] |> string)
     + (answer.['7'] |> string)
 // C9E29889 is wrong
 // 999828EC is right

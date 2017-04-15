@@ -1,10 +1,10 @@
 (*
-#load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveTest.fsx";; 
-#load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveMain.fsx";; 
-open FiveMain;; 
+#load @"./FiveTest.fsx";;
+#load @"./FiveMain.fsx";;
+open FiveMain;;
 open FiveTest;;
 *)
-#load @"c:\Users\SVShah\Projects\fsaoc2016\5\FiveMain.fsx"
+#load @"./FiveMain.fsx"
 open FiveMain
 
 let md5ootb (msg: string) =
