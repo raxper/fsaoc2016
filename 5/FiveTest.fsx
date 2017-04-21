@@ -7,14 +7,6 @@ open FiveTest;;
 #load @"./FiveMain.fsx"
 open FiveMain
 
-let md5ootb (msg: string) =
-  use md5 = System.Security.Cryptography.MD5.Create()
-  msg
-  |> System.Text.Encoding.ASCII.GetBytes
-  |> md5.ComputeHash
-  |> Seq.map (fun c -> c.ToString("X2"))
-  |> Seq.reduce ( + )
-
 let md5test1 =
   let str = ""
   let x = md5sum str
