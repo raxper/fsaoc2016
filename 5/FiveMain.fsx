@@ -83,21 +83,10 @@ let gIdxs =
   |> List.map2 (fun idx func -> func idx) [0..63]
 
 (*
-private static final int[] SHIFT_AMTS = {
-  7, 12, 17, 22,
-  5,  9, 14, 20,
-  4, 11, 16, 23,
-  6, 10, 15, 21
-};
-
-static short rot0[] = { 7,12,17,22};
-static short rot1[] = { 5, 9,14,20};
-static short rot2[] = { 4,11,16,23};
-static short rot3[] = { 6,10,15,21};
-static short *rots[] = {rot0, rot1, rot2, rot3 };
-
-rotA = listArray (1,64) $ concat . replicate 4 =<<
-       [[7, 12, 17, 22], [5, 9, 14, 20], [4, 11, 16, 23], [6, 10, 15, 21]]
+s[ 0..15] := { 7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22 }
+s[16..31] := { 5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20 }
+s[32..47] := { 4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23 }
+s[48..63] := { 6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21 }
 *)
 /// specifies the per-round shift amounts
 let s =
@@ -171,6 +160,8 @@ md5round datA (MD5 a b c d) i =
 *)
 /// This is the "Main loop" in "Process the message in successive 512-bit chunks" that goes from 0 to 63. The process starts with the initial MD5 for each run of the loop from 0 to 63.
 let md5round (msg:uint32[]) {MD5.a=a; MD5.b=b; MD5.c=c; MD5.d=d} i =
+  // leftrotate (x, c)
+  //   return (x << c) binary or (x >> (32-c));
   let rotateL32 r x = (x<<<r) ||| (x>>>(32-r))
   let f = fghi.[i] b c d
   let a' = b + (a + f + k.[i] + msg.[gIdxs.[i]] |> rotateL32 s.[i])
@@ -205,12 +196,12 @@ md5@(MD5 a b c d) <+> bs =
 *)
 /// This is the code that does 1 run-through (i.e. 1 512-bit / 64-byte chunk) of the "Process the message in successive 512-bit chunks" loop.
 let md5plus m (bs:byte[]) =
-  let datA =
+  let msg =
     bs
     |> Array.chunkBySize 4
     |> Array.take 16
     |> Array.map (fun elt -> System.BitConverter.ToUInt32(elt, 0))
-  let m' = List.fold (md5round datA) m [0..63]
+  let m' = List.fold (md5round msg) m [0..63]
   {a=m.a+m'.a; b=m.b+m'.b; c=m.c+m'.c; d=m.d+m'.d}
 
 (*
@@ -228,21 +219,27 @@ for (int i = 0; i < 8; i++)
 }
 *)
 /// Pads a message so that length is a multiple of 64 bytes AND there's enough space to put the size at the end (8 bytes)
-let padMessage(msg : byte []) =
+let padMessage (msg : byte []) =
   let msgLen = Array.length msg
   let msgLenInBits = (uint64 msgLen) * 8UL
+
   let lastSegmentSize =
     let m = msgLen % 64
     if m = 0 then 64
     else m
-  let pad =
-    Array.create (if lastSegmentSize >= 56 then (64 - lastSegmentSize + 64)
-                  else 64 - lastSegmentSize) 0uy
-  Array.set pad 0 0x80uy
-  for i = 0 to 7 do
-    Array.set pad (Array.length pad - 8 + i)
-      ((msgLenInBits >>> (8 * i)) |> byte)
-  Array.append msg pad
+
+  let padLen =
+    64 - lastSegmentSize + (if lastSegmentSize >= 56 then 64
+                            else 0)
+
+  [|
+    yield 128uy
+    for i in 2..padLen - 8 do
+      yield 0uy
+    for i in 0..7 do
+      yield ((msgLenInBits >>> (8 * i)) |> byte)
+  |]
+  |> Array.append msg
 
 let md5sum (msg: string) =
   System.Text.Encoding.ASCII.GetBytes msg
