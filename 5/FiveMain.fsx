@@ -269,7 +269,7 @@ let day5part1 input crit (md5sum:string -> string) =
   |> Seq.reduce ( + )
 
 // Takes a while to run
-// printfn "Day 5 Part 1: %s" (day5part1 day5part1input day5part1criteria md5sum)
+// printfn "Day 5 Part 1: %s" (day5part1 day5part1input day5part1criteria md5ootb)
 
 open System.Collections.Generic
 
@@ -299,6 +299,28 @@ let day5part2 input crit (md5sum: string -> string) =
   ]
   |> List.reduce ( + )
 
+let day5part2alt input crit (md5sum : string -> string) =
+  let complete l = l |> List.filter ((=) "") |> List.isEmpty
+
+  let rec collector i acc =
+    if complete acc then acc
+    else
+      let m = md5sum (input + string i)
+      if (m.StartsWith crit) then
+        match m.[5] with
+        | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' ->
+          List.mapi (fun idx elt ->
+            if elt = "" && idx = (m.[5] |> string |> System.Int32.Parse) then
+              string m.[6]
+            else elt) acc
+          |> collector (i + 1)
+        | _ -> collector (i + 1) acc
+      else collector (i + 1) acc
+
+  [ ""; ""; ""; ""; ""; ""; ""; "" ]
+  |> collector 0
+  |> List.reduce (+)
+
 let md5ootb (msg: string) =
   use md5 = System.Security.Cryptography.MD5.Create()
   msg
@@ -309,7 +331,8 @@ let md5ootb (msg: string) =
 
 (* Takes a long time to run:
 #time
-day5part2 day5part1input day5part1criteria md5sum
+day5part2 day5part1input day5part1criteria md5ootb
+day5part2alt day5part1input day5part1criteria md5ootb
 #time
 *)
 // C9E29889 is wrong - parallel seq
