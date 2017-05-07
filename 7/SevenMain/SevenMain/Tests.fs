@@ -1,8 +1,6 @@
 module Tests
 
 open Expecto
-open FsCheck
-open Expecto.ExpectoFsCheck 
 
 [<Tests>]
 let tests =
