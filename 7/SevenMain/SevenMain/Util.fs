@@ -6,6 +6,19 @@ open System.Text.RegularExpressions
 /// For debugging
 let tee f x = f x |> ignore; x
 
+/// Extract supernet sequences from an IP address.
+let supernetSeq ip =
+  Regex.Replace (ip, @"\[\w+\]", " ")
+  |> fun s -> s.Split ([|' '|])
+
+/// Extract hypernet sequences from an IP address.
+let hypernetSeq ip =
+  Regex.Matches (ip, @"\[\w+\]")
+  |> Seq.cast<Match>
+  |> Seq.map (fun m -> Regex.Match(m.Value, @"\w+"))
+  |> Seq.cast<Match>
+  |> Seq.map (fun x -> x.Value)
+
 /// Checks if a string contains a four-character sequence which consists of a pair of two different characters followed by the reverse of that pair
 let isABBA (str:string) =
   str
@@ -14,16 +27,8 @@ let isABBA (str:string) =
 
 /// checks if a string supports TLS, which means that it has one ABBA and it has no ABBAs in the hypernet sequences.
 let supportsTLS (str:string) : bool =
-  let outerStrings =
-    Regex.Replace (str, @"\[\w+\]", " ")
-    |> fun s -> s.Split ([|' '|])
-  let hypernetStrings =
-    Regex.Matches (str, @"\[\w+\]")
-    |> Seq.cast
-    |> Seq.map (fun (m:Match) -> Regex.Match(m.Value, @"\w+"))
-    |> Seq.cast<Match>
-    |> Seq.map (fun x -> x.Value)
-  (Seq.exists isABBA outerStrings) && (Seq.exists isABBA hypernetStrings |> not)
+  (supernetSeq str |> Seq.exists isABBA)
+  && (hypernetSeq str |> Seq.exists isABBA |> not)
 
 /// Day 7 Part 1
 let day7part1 filename =
@@ -54,28 +59,18 @@ let hasBAB abas hnStr =
     |> getABAs
     |> Set.ofSeq
   abas
+  |> Set.ofSeq
   |> Set.map flipABA
   |> Set.intersect babs
-  |> Set.count
-  |> ( < ) 0
+  |> (Set.isEmpty >> not)
 
 /// An IP supports SSL if it has an Area-Broadcast Accessor, or ABA, anywhere in the supernet sequences (outside any square bracketed sections), and a corresponding Byte Allocation Block, or BAB, anywhere in the hypernet sequences.
 let supportsSSL line =
-  let supernetSeq =
-    Regex.Replace (line, @"\[\w+\]", " ")
-    |> fun s -> s.Split ([|' '|])
-    |> Set.ofArray
-  let hypernetSeq =
-    Regex.Matches (line, @"\[\w+\]")
-    |> Seq.cast
-    |> Seq.map (fun (m:Match) -> Regex.Match(m.Value, @"\w+"))
-    |> Seq.cast<Match>
-    |> Seq.map (fun x -> x.Value)
   let abas =
-    supernetSeq
+    supernetSeq line
     |> Seq.collect getABAs
-    |> Set.ofSeq
-  (Seq.exists hasABA supernetSeq) && (Seq.exists (hasBAB abas) hypernetSeq)
+  (supernetSeq line |> Seq.exists hasABA)
+  && (hypernetSeq line |> Seq.exists (hasBAB abas))
 
 let day7part2 filename =
   File.ReadAllLines filename

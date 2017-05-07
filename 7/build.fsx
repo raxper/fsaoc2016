@@ -25,6 +25,13 @@ Target "Build" (fun _ ->
     // compile all projects below src/app/
     MSBuildDebug buildDir "Build" appReferences
     |> Log "AppBuild-Output: "
+
+    // MSBuild buildDir "Build"
+    //     [ "Configuration", "Debug"
+    //       "", ""
+    //     ]
+    //     appReferences
+    // |> Log "AppBuild-Output: "
 )
 
 Target "Deploy" (fun _ ->
